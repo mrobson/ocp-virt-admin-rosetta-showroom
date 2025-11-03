@@ -8,8 +8,7 @@
 
 
 * xref:module-03.adoc[3. Hot Plugging Resources  ]
-** xref:module-03.adoc#cpu[CPU]
-** xref:module-03.adoc#memory[Memory]
+** xref:module-03.adoc#cpu[CPU and Memory]
 ** xref:module-03.adoc#disk[Disk]
 ** xref:module-03.adoc#nic[NIC]
 
