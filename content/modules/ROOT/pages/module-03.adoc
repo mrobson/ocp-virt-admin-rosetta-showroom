@@ -8,7 +8,7 @@ In this module, you will perform three tasks:
 
 [#cpu]
 == Adding CPU and Memory to a running VM
-In this lab, we will add more CPU and Memory resources to a virtual machine by changing the virtual machine’s Instance Type. To do this, you will start with an existing VM that has a single vCPU and 2GiB of memory. Using the OpenShift Virtualization console, you will modify the configuration of the VM Instance Type two a type that has 2 vCPU and 4GiB of memory.
+In this lab, we will add more CPU and Memory resources to a virtual machine by changing the virtual machine’s Instance Type. To do this, you will start with an existing VM that has a single vCPU and 2 GiB of memory. Using the OpenShift Virtualization console, you will modify the configuration of the VM Instance Type to a type that has 2 vCPU and 4 GiB of memory.
 
 [start=1]
 . Login to the OpenShift console using the credentials provided to you by the lab administrator. Navigate to Virtualization -> Virtual Machines, and select the virtualmachines project. Select the VM named vm01.
@@ -64,6 +64,9 @@ image::exercise3/03-image-cpu-005.png[]
 
 [start=6]
 . Verify the new resources by logging in to the VM using the credentials at the top of the console window. In this case, the username is rhel and the password is redhat.
+
+NOTE: In order for the new CPU and Memory configuration to take effect, the virtual machine will automatically migrate from one worker node to another. If the new CPU and Memory configuration does not appear immediately, you may have to wait a few minutes.
+
 ++++
 <a href="_image::exercise3/03-image-cpu-006.png" target="_blank" class="popup">
 ++++
@@ -74,10 +77,14 @@ image::exercise3/03-image-cpu-006.png[]
 
 [start=7]
 . To validate that the VM now has 2 CPUs, run the command:
+...
   $ grep processor /proc/cpuinfo
+...
 You will see that two processors exist.
 To validate that the VM now has 4GiB of memory, run the command:
+...
   $ free -m
+...
 You will see that the VM has 3669 MiB of total memory.
 
 NOTE: This VM image has kdump enabled, which reserves some memory for the kernel. This is why the memory amount appears to be less than 4 GiB. In fact, 4 GiB of memory is configured for the VM, but the operating system sees a lower number. If kdump were disabled, the total memory would be 4 GiB.
