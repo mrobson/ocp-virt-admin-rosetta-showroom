@@ -184,7 +184,7 @@ image::exercise3/03-image-nic-008.png[]
 ++++
 
 [start=10]
-. The new NIC is now available for use (enp2s0).
+. The new NIC is now available for use (enp3s0).
 ++++
 <a href="_image::exercise3/03-image-nic-009.png" target="_blank" class="popup">
 ++++
