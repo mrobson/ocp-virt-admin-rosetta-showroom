@@ -2,9 +2,9 @@
 
 In this module, you will perform three tasks:
 
-. <<cpu,Increase the CPU and Memory of a running VM>>
-. <<disk,Add a virtual disk to a running VM and then make it persistent>>
-. <<nic,Add a network interface (NIC) to a virtual machine>>
+* <<cpu,Increase the CPU and Memory of a running VM>>
+* <<disk,Add a virtual disk to a running VM and then make it persistent>>
+* <<nic,Add a network interface (NIC) to a virtual machine>>
 
 [#cpu]
 == Adding CPU and Memory to a running VM
