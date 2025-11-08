@@ -9,50 +9,63 @@ This lab demonstrates the capabilities of the Node Health Check Operator and the
 
 [start=1]
  . Navigate to Ecosystem → Installed Operators. Then click Node Health Check → create NodeHealthCheck
-
-[start=2]
-. Name the NodeHealthCheck workerhealthcheck
-Set Selector Labels to worker
-
-
-[start=3]
-. Create a node health check 
+Create a node health check 
 Installed Operators click Node Health Check Operator
 Click Node health check > create NodeHealthCheck
 
 image::exercise6/06-image-nodehealthcheck.png[title="Create NodeHealthCheck", link=self, window=blank, width=100%]
 
-[start=4]
+[start=2]
 . Name it workerhealthcheck
+image::exercise6/06-image-nodehealthcheck2.png[title="Create NodeHealthCheck", link=self, window=blank, width=100%]
 Set Selector Labels to worker
-Change duration to 60s for both Unhealthy Conditions
+Change duration to 60s for both Unhealthy Conditions.
+image::exercise6/06-image-nodehealthcheck3.png[title="Create NodeHealthCheck", link=self, window=blank, width=100%]
 Click create
 
-[start=5]
-. Find out what node your vm is running on 
+[start=3]
+.  Login into your bastion host with credentials provided to you by the lab administrator.
 
 [source,bash]
 ----
-oc get vmi
+ssh lab-user@<host> -p 32270
+----
+
+[start=4]
+. Using the credentials provided by the lab administrator, log in to the OpenShift CLI from your terminal on the bastion host. Be sure to substitute the placeholder password and cluster name with the specific values you were given.
+
+[source,bash]
+----
+oc login -u admin -p <password> --server=https://api.cluster-<clustername>.dynamic.redhatworkshops.io:6443
+----
+
+[start=5]
+. Next, locate the node hosting vm01 located within the virtualmachines project section and record this information.
+
+[source,bash]
+----
+$ oc get vmi -n virtualmachines
 ----
 
 [start=6]
-. Open two terminal additional terminal sessions for monitoring
+. To monitor the process, open two additional terminal sessions and SSH into the bastion host from each.
+
 
 [start=7]
-. On the first new terminal you opened. We are going to use this to monitor the node found in step 5.
+. On the original terminal you created we are going to force the worker from step 5 to go into an unhealthy state.
 
 [source,bash]
 ----
-$ oc get nodes < worker from step 5> -w
+oc get nodes < worker from step 5> -w
 ----
 
 [start=8]
-. On the second new terminal you opened. We are going to use this to monitor you vm
+. On the second new terminal you opened. We are going to use this to monitor you vm.
+Here you can see that self remediation is occurring on the node
 
 [source,bash]
 ----
-oc get -n labvm vmi -w
+oc get -n virtualmachines vmi -w
 ----
 
 [start=9]
@@ -66,10 +79,9 @@ systemctl stop kubelet
 ----
 
 [start=10]
-. Go to operator > Installed operators  > Self Node Remediation Operator > Self Node Remediation
-Here you can see that self remediation is occurring on the node
+. Navigate to Ecosystem → Installed Operators → Self Node Remediation Operator → Self Node Remediation
+Here you can see that self remediation is occurring on the node.
+
 
 [start=11]
-. Initially, your worker will transition to a 'not ready' state, causing the VM to fail. Subsequently, the worker will enter a 'NotReady, SchedulingDisabled' state, and the VM will become pending.
-
 The VM will then proceed through scheduling and be scheduled onto a new node, where it will begin running. Concurrently, the original node will undergo remediation by the Self Node Remediation operator and be restored to a healthy state.
