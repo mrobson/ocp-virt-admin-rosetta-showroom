@@ -154,7 +154,7 @@ image::exercise3/03-image-disk-persist-002.png[title="Stop the VM", link=self, w
 image::exercise3/03-image-disk-persist-003.png[title="Add a volume", link=self, window=blank, width=100%]
 
 [start=4]
-. Give the disk a name, if desired, and select the previously disconnected PVC name in the PersistentVolumeClaim name menu (e.g. dv-vm01-data-disk-01-4uvf4o)
+. Give the disk a name, if desired, and select the previously disconnected PVC name in the PersistentVolumeClaim name menu (e.g. dv-vm01-data-disk-01-um6O11)
 
 image::exercise3/03-image-disk-persist-004.png[title="Select the PVC", link=self, window=blank, width=100%]
 
@@ -185,7 +185,7 @@ In this lab, we will add a new network interface connection (NIC) to an existing
 . Login to the OpenShift console using the credentials provided to you by the lab administrator. Navigate to Virtualization -> Virtual Machines, and select the virtualmachines project. Select the VM named vm01.
 
 [start=2]
-. Take note of the worker node on which the VM is running (e.g. worker-cluster-s67qr-1)
+. Take note of the worker node on which the VM is running (e.g. worker-cluster-m2ssq-3)
 
 image::exercise3/03-image-nic-002.png[title="Identify the worker node", link=self, window=blank, width=100%]
 
@@ -224,6 +224,6 @@ image::exercise3/03-image-nic-006.png[title="Migrate the VM", link=self, window=
 image::exercise3/03-image-nic-008.png[title="Messages on consoel about new NIC", link=self, window=blank, width=100%]
 
 [start=9]
-. The new NIC is now available for use (enp3s0).
+. The new NIC is now available for use (e.g. enp2s0, but your environment may have a different interface name).
 
 image::exercise3/03-image-nic-009.png[title="New NIC is up", link=self, window=blank, width=100%]
