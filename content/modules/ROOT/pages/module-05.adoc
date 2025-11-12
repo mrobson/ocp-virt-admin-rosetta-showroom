@@ -1,204 +1,106 @@
-= Live Migration of Workloads
-Migrating workloads between compute nodes and storage types is a crucial feature of any
-modern hypervisor. OpenShift Virtualization allows the sumple and easy process of 
-migrating your virtual machine compute and storage from one place to another.
+= Dynamic Rescheduling of Workloads
 
-In this lab, you will start by migrating the virtual machine compute from one node to another. 
-Then, you will migrate the VM's storage from one StorageClass to another.
 
-Objectives
+You can use the descheduler to evict pods based on specific strategies so that the pods can be rescheduled onto more appropriate nodes.
 
-* <<compute,Live migration of a virtual machine from one node to another specific node>>
+You can benefit from descheduling running pods in situations such as the following:
 
-* <<computerand,Live migration of a virtual machine from one node to another random node>>
+* Nodes are underutilized or overutilized.
+* Pod and node affinity requirements, such as taints or labels, have changed and the original scheduling decisions are no longer appropriate for certain nodes.
+* Node failure requires pods to be moved.
+* New nodes are added to clusters.
+* Pods have been restarted too many times.
 
-* <<storage,Live migration of virtual machine storage from one StorageClass to another.>>
+== Objectives
 
-[#compute]
-== Compute Migration to a specific node
-During maintenance or troubleshooting, you might need to migrate a VM to a different node.
-Live migration is the process of moving a running Virtual Machine Instance (VMI) to a different node without disruption.
+In this module, we will guide you through the process of configuring Rescheduling Strategies with these profiles:
 
-NOTE: This is similar to the VMware vMotion feature for VMs.
+* LifecycleAndUtilization - LowNodeUtilization
+  ** finds nodes that are underutilized and evicts pods, if possible, from overutilized nodes in the hope that recreation of evicted pods will be scheduled on these underutilized nodes.
+  *** A node is considered underutilized if its usage is below 20% for all thresholds (CPU, memory, and number of pods).
+  *** A node is considered overutilized if its usage is above 50% for any of the thresholds (CPU, memory, and number of pods).
 
-In this lab, you will be performing a live migration of a virtual machine
-from one compute node to another. To do this, you will access a running VM,
-determine its current node, and then move it to another node.
+* KubeVirtRelieveAndMigrate
+  ** evicts pods from high-cost nodes to reduce overall resource expenses and enable workload migration. It also periodically rebalances workloads to help maintain similar spare capacity across nodes, which supports better handling of sudden workload spikes. Nodes can experience the following costs:
 
-Requirements
+  *** Resource utilization: Increased resource pressure raises the overhead for running applications.
+  *** Node maintenance: A higher number of containers on a node increases resource consumption and maintenance costs.
 
-* The underlying PVC must use ReadWriteMany (RWX) access mode
+== Requirements
 
-* The pod network must not be configured with the bridge binding type.
+* Descheduler Operator must be installed
+* The `KubeVirtRelieveAndMigrate` profile requires PSI metrics to be enabled on all worker nodes. For your convenience, this is already enabled in this lab.
 
-* Ports 49152 and 49153 must be available in the VM's virt-launcher pod; live migration fails if these ports are specified in a masquerade network interface.
+== Instructions
 
-* CPU model must match on the source and destination node
+=== 1. Access the LAB
+1.1 Log in to the OpenShift cluster as the <admin> user with <password> as the password
 
-Instructions
-[start=1]
-. Access the lab
-Log in to the OpenShift cluster as the <admin> user with <password> as the password.
-Identify the URL for the OpenShift web console 
 
-[start=2]
-. Navigate to Virtualization -> Virtual Machines and then click on the virtual machine named vm01.
-Note which worker node the VM is currently running on (example: worker-cluster-s67qr-2).
+[source,sh,role=execute]
+----
+oc login -u admin -p redhatocp https://api.ocp4.example.com:6443
+----
+1.2 Identify the URL for the OpenShift web console
 
-image::exercise1/01-image-compute-002.png[title="Virtual machine details", link=self, window=blank, width=100%]
 
-[start=3]
-. To migrate the VM to another worker node, click on the Actions menu, hover over Migration, and then click on Compute.
+[source,sh,role=execute]
+----
+oc whoami --show-console
+----
 
-image::exercise1/01-image-compute-003.png[title="Initiate migration", link=self, window=blank, width=100%]
+1.3. Open a web browser and go to https://console-openshift-console.apps.ocp4.example.com. Click htpasswd_provider and log in as the <admin> user with <password> as the password
 
-[start=4]
-. You will be presented with a window that asks if you would like to select the target worker node Automatically or to select a Specific Node.
 
-image::exercise1/01-image-compute-004.png[title="Configure migration", link=self, window=blank, width=100%]
 
-[start=5]
-. Change the selection to Specific Node and then click on the node worker-cluster-s67qr-1.
+== 2. Check which virtual machines are running in the `dynamic-schedule` namespace
 
-image::exercise1/01-image-compute-005.png[title="Select worker node", link=self, window=blank, width=100%]
+[source,sh,role=execute]
+----
+oc get vmi -n dynamic-schedule
+----
 
-[start=6]
-. Wait a few moments and you will see that the Virtual Machine status changes from Running to Migrating.
+You should see the following output:
 
-image::exercise1/01-image-compute-006.png[title="VM is migrating", link=self, window=blank, width=100%]
+[source,sh,role=execute]
+----
+NAME     AGE     PHASE     IP             NODENAME
+dynamic-schedule-vm1    10m     Running   10.129.2.111   worker01
+dynamic-schedule-vm2    10m     Running   10.129.2.112   worker02
+----
 
-[start=7]
-. A few moments after that, the Virtual Machine status will return to Running.
-Note that the worker node is now worker-cluster-s67qr-1.
+Or using the OpenShift Virtualization console, you can see the VMs in the `dynamic-schedule` namespace.
 
-image::exercise1/01-image-compute-007.png[title="VM is running", link=self, window=blank, width=100%]
+image::exercise5/05-image-vm-list.png[title="VM List", link=self, window=blank, width=100%]
 
-[start=8]
-. The VM has migrated to a new worker node while still running.
-Note that you will use this live migration process again later in this lab.
+== 3. Configure the Descheduler Operator
 
-[#computerand]
-== Compute Migration to a random node
-During maintenance or troubleshooting, you might need to migrate a VM to a different node.
-Live migration is the process of moving a running Virtual Machine Instance (VMI) to a different node without disruption.
+[source,sh,role=execute]
+----
+oc edit descheduler dynamic-schedule
+----
 
-NOTE: This is similar to the VMware vMotion feature for VMs.
+You should see the following output:
 
-In this lab, you will be performing a live migration of a virtual machine
-from one compute node to another. To do this, you will access a running VM,
-determine its current node, and then move it to another node.
+[source,yaml]
+----
+apiVersion: operator.openshift.io/v1
+kind: KubeDescheduler
+metadata:
+  name: cluster
+  namespace: openshift-kube-descheduler-operator
+spec:
+  logLevel: Normal
+  mode: Predictive
+  operatorLogLevel: Normal
+  profileCustomizations:
+    devDeviationThresholds: AsymmetricLow
+  profiles:
+    - LifecycleAndUtilization
+    - KubeVirtRelieveAndMigrate
+  deschedulingIntervalSeconds: 3600
+  managementState: Managed    
+----
 
-Requirements
+NOTE: Notice the mode is set to Predictive. By default, the descheduler does not evict pods. To evict pods, set mode to Automatic.
 
-* The underlying PVC must use ReadWriteMany (RWX) access mode
-
-* The pod network must not be configured with the bridge binding type.
-
-* Ports 49152 and 49153 must be available in the VM's virt-launcher pod; live migration fails if these ports are specified in a masquerade network interface.
-
-* CPU model must match on the source and destination node
-
-[start=1]
-. Access the lab
-Log in to the OpenShift cluster as the <admin> user with <password> as the password.
-Identify the URL for the OpenShift web console 
-
-[start=2]
-. Navigate to Virtualization -> Virtual Machines and then click on the virtual machine named vm01.
-Note which worker node the VM is currently running on (example: worker-cluster-s67qr-2).
-
-image::exercise1/01-image-compute-002.png[title="Virtual machine details", link=self, window=blank, width=100%]
-
-[start=3]
-. To migrate the VM to another worker node, click on the Actions menu, hover over Migration, and then click on Compute.
-
-image::exercise1/01-image-compute-003.png[title="Initiate migration", link=self, window=blank, width=100%]
-
-[start=4]
-. You will be presented with a window that asks if you would like to select the target worker node Automatically or to select a Specific Node.
-Leave the selection at the default, which is to migrate to an Automatically selected Node
-
-image::exercise1/01-image-compute-004.png[title="Configure migration", link=self, window=blank, width=100%]
-
-[start=6]
-. Wait a few moments and you will see that the Virtual Machine status changes from Running to Migrating.
-
-image::exercise1/01-image-compute-006.png[title="VM is migrating", link=self, window=blank, width=100%]
-
-[start=7]
-. A few moments after that, the Virtual Machine status will return to Running.
-Note that the worker node has changed (e.g. worker-cluster-s67qr-3).
-
-image::exercise1/01-image-compute-007.png[title="VM is running", link=self, window=blank, width=100%]
-
-[start=8]
-. The VM has migrated to a new worker node while still running.
-Note that you will use this live migration process again later in this lab.
-
-[#storage]
-== Storage Migration
-Storage environments often have their own lifecycles and performance profiles, so it is important to be able to move
-virtual machines from one storage type to another for lifecycle and performance management. OpenShift Virtualization
-allows the migration of PVCs from one StorageClass to another while the virtual machine is running.
-
-NOTE: This is similar to the VMware Storage vMotion feature for VMs.
-
-[start=1]
-. Login to the OpenShift console using the credentials provided to you by the lab administrator. Navigate to Virtualization -> Virtual Machines, and select the virtualmachines project. Select the VM named vm01.
-
-image::exercise1/01-image-storage-001.png[title="Virtual machine details", link=self, window=blank, width=100%]
-
-[start=2]
-. Click on the Configuration tab and select Storage. Note that the VM currently has a single bootable disk that is using the StorageClass called ocs-external-storagecluster-ceph-rbd.
-
-image::exercise1/01-image-storage-002.png[title="View storage details", link=self, window=blank, width=100%]
-
-[start=3]
-. Click on the Console tab and login to the virtual machine using the credentials above the console window.
-Run a command, such as top or ping, that will continue running as we perform the remainder of this exercise.
-
-image::exercise1/01-image-storage-003.png[title="Run command on console", link=self, window=blank, width=100%]
-
-[start=4]
-. Click on the Actions menu and hover over Migration and click on Storage.
-
-image::exercise1/01-image-storage-004.png[title="Initiate storage migration", link=self, window=blank, width=100%]
-
-[start=5]
-. In the window that appears, review the options and then click on Next. It is not necessary to change any settings at this time.
-
-image::exercise1/01-image-storage-005.png[title="Migration details", link=self, window=blank, width=100%]
-
-[start=6]
-. In the next screen, select the Destination Storage Class called custom-storage-class.
-Click Next.
-
-image::exercise1/01-image-storage-006.png[title="Select destination StorageClass", link=self, window=blank, width=100%]
-
-[start=7]
-. Review the storage migration configuration and then click on Migrate VirtualMachine storage.
-
-image::exercise1/01-image-storage-007.png[title="Review migration details", link=self, window=blank, width=100%]
-
-[start=8]
-. The next window will show you the status of the storage migration. It is safe to close the window with the “X” in the top corner, or you may click on the link to View storage migrations.
-Do not click the Stop button.
-
-image::exercise1/01-image-storage-008.png[title="Migration has started", link=self, window=blank, width=100%]
-
-[start=9]
-. To view the storage migration status, navigate to Migration -> Storage migration where you can view the status of the migration plan. The migration plan will start in the Pending state, then move to Running, then finally Completed. 
-NOTE: It may take some time for the migration to complete.
-
-image::exercise1/01-image-storage-009.png[title="Migration is running", link=self, window=blank, width=100%]
-
-[start=10]
-. Once the migration is Complete, navigate back to the virtual machine called vm01 and view the Configuration -> Storage options again.
-Note that the name of the Source has changed and the Storage class has changed to custom-storage-class, which is what you selected in the storage migration plan.
-
-image::exercise1/01-image-storage-010.png[title="VM has been migrated", link=self, window=blank, width=100%]
-
-[start=11]
-. Click on the Console tab. You will see that your application is still running uninterrupted.
-
-image::exercise1/01-image-storage-011.png[title="No interruption during storage migration", link=self, window=blank, width=100%]
