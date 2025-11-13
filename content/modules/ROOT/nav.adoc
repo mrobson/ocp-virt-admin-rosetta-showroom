@@ -16,9 +16,9 @@
 ** xref:module-03.adoc#nic[Adding a NIC to a running VM]
 
 * xref:module-04.adoc[4. Affinity and Anti-Affinity for VM Placement ]
-** xref:module-04.adoc#affinity[Node Affinity]
-** xref:module-04.adoc#affinity[Pod Affinity]
-** xref:module-04.adoc#antiaffinity[Pod Anti-Affinity]
+** xref:module-04.adoc#nodeaffinity[Node Affinity]
+** xref:module-04.adoc#podaffinity[Pod Affinity]
+** xref:module-04.adoc#podantiaffinity[Pod Anti-Affinity]
 
 * xref:module-05.adoc[5. Dynamic Rescheduling of Workloads  ]
 

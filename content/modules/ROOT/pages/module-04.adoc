@@ -5,44 +5,60 @@
 In this lab, you will be applying Node Affinity, Pod Affinity, and Anti-Pod Affinity to Virtual Machines (VMs). The primary objective is to deepen your understanding of these principles and demonstrate how they can be applied effectively in real-world scenarios.
 
 
-[#Node Affinity]
+[#nodeaffinity]
 = Node Affinity
 
 [start=1]
 . First go to the affinity project
-Home > Project > affinity
+Home → Project → affinity
 
 [start=2]
 . Login into your bastion host with credentials provided to you by the lab administrator. You will need this for later steps. You will need this for later steps.
-	
+
+[source,bash]
+----	
 ssh lab-user@<host> -p 32270
+----
 
 [start=3]
 . Using the credentials provided by the lab administrator, log in to the OpenShift CLI from your terminal on the bastion host. Be sure to substitute the placeholder password and cluster name with the specific values you were given.
+[source,bash]
+----
 oc login -u admin -p <password> --server=https://api.cluster-<clustername>.dynamic.redhatworkshops.io:6443
-
+----
 
 [start=4]
 . Find out what node the node-affinity-vm is running on. 
 To do this you can look at the vm in the affinity project or you can use the openshift CLI.
+
+[source,bash]
+----
 oc project affinity
 oc get vmi node-affinity-vm
+----
 
 [start=5]
 . Set an east node label on any work where the node-affinity-vm is currently not running
+[source,bash]
+----
 oc get nodes
 oc label node <worker where node-affinity-vm is not running>   zone=east
+----
+
 Alternatively you can use the OpenShift Console by going to Compute > Nodes  and then pick a node where node-affinity-vm is not running. Then click the 3 dots and click edit labels.
 
 [start=6]
 . Make sure the label was applied
+[source,bash]
+----
 oc get nodes <worker you just labeled> --show-labels | grep -i zone=east
+----
 
 [start=7]
-. Navigate to Virtualization > Virtual Machines > node-affinity-vm > Configuration 
+. Navigate to Virtualization → Virtual Machines → node-affinity-vm → Configuration 
 
 [start=8]
-. Now navigate to Scheduling> Affinity rules
+. Now navigate to Scheduling →Affinity rules
 
 [start=9]
 . Click add affinity rule
@@ -57,8 +73,12 @@ oc get nodes <worker you just labeled> --show-labels | grep -i zone=east
 
 [start=12]
 . Now let's take a look at the Node Affinity rule on node-affinity-vm. You can do this by using the GUI and going to YAML on the pod-anti-affinity-vm or you can do it on the CLI.
+
+[source,bash]
+----
 oc edit vm pod-anti-affinity-vm 
 :q!
+----
 
 [start=13]
 . To make the vm follow these new affinity rules. You normally would migrate it to the node with the label. However, to show that this affinity rule is working. We are going to power off the vm completely and then power it back on. 
@@ -71,19 +91,24 @@ oc edit vm pod-anti-affinity-vm
 
 [start=16]
 . On the GUI you can see that your vm has moved to the node where the label was set. You can also see this on the OCP CLI if you prefer
+[source,bash]
+----
 oc get vmi node-affinity-vm
- 
+---- 
 
-[#Pod Affinity]
+[#podaffinity]
 =Node Affinity
 We will now demonstrate  pod affinity.
 
 [start=1]
 . First we are going to add a label to node-affinity-vm. So we can make this the vm the pod that we will have node affinity to. On the OpenShift Console we are going to edit the vm and add the app: node-aff
-
+[source,bash]
+----
 oc edit vmi node-affinity-vm -n affinity
+----
 
-
+[source,bash]
+----
 apiVersion: kubevirt.io/v1
 kind: VirtualMachineInstance
 metadata:
@@ -170,18 +195,25 @@ spec:
         kubevirt.io/domain: node-affinity-vm
         kubevirt.io/size: small
         network.kubevirt.io/headlessService: headless
-
+----
+[source,bash]
+----
 :wq!
+----
 
 [start=2]
 . Click the pod-affinity-vm  
 
 [start=3]
 . See where the pod-affinity-vm is running by looking at OpenShift Console or check on the OpenShift Command line. 
+
+[source,bash]
+----
 oc get vmi pod-affinity-vm
+----
 
 [start=4]
-. Click Configure > scheduling
+. Click Configure → scheduling
 
 [start=5]
 . Click the Affinity rules
@@ -210,33 +242,45 @@ oc get vmi pod-affinity-vm
 
 [start=13]
 . Now let's take a look at the Pod Affinity rule on pod-affinity-vm. You can do this by using the GUI and going to YAML on the pod-anti-affinity-vm or you can do it on the CLI.
+
+[source,bash]
+----
 oc edit vm pod-anti-affinity-vm 
 :q!
+----
 
 [start=14]
 . See where the pod-affinity-vm and node-affinity-vm are running by looking at OpenShift Console or check on the OpenShift Command line. 
+
+[source,bash]
+----
 oc get vmi pod-affinity-vm
 oc get vmi node-affinity-vm
+----
 
 [start=15]
 . To make the vm follow these new affinity rules. You normally would migrate it to the node with the label. However, to show that this affinity rule is working. We are going to power off the vm completely and then power it back on. 
 
 [start=16]
-. On  Click Action stop.
+. On Click Action stop.
 
 [start=17]
 . Once the VM completely stops. Click Actions Start.
 
 [start=18]
 . See where the pod-affinity-vm and node-affinity-vm are running by looking at OpenShift Console or check on the OpenShift Command line. 
+
+[source,bash]
+----
 oc get vmi pod-affinity-vm
 oc get vmi node-affinity-vm
+----
 
 [start=19]
 . You will now see the the pod-affinity-vm is now running the same location as the node-affinity-vm because of the pod affinity rule.
 
 
-[#Pod Anti-Affinity]
+[#Podantiaffinity]
 = Pod Anti-Affinity
 
 [start=1]
@@ -245,7 +289,7 @@ oc get vmi node-affinity-vm
 . Click the pod-affinity-vm  
 
 [start=3]
-. Click Configure > scheduling
+. Click Configure → scheduling
 
 [start=4]
 . Click the Affinity rules
@@ -273,14 +317,22 @@ oc get vmi node-affinity-vm
 
 [start=12]
 . Now let's take a look at the Pod Anto Affinity rule on pod-anti-affinity-vm. You can do this by using the GUI and going to YAML on the pod-anti-affinity-vm or you can do it on the CLI.
+
+[source,bash]
+----
 oc edit vm pod-anti-affinity-vm 
 :q!
+----
 
 
 [start=13]
 . See where the pod-affinity-vm and node-affinity-vm are running by looking at OpenShift Console or check on the OpenShift Command line. 
+
+[source,bash]
+----
 oc get vmi pod-anti-affinity-vm
 oc get vmi node-affinity-vm
+----
 
 [start=14]
 . To make the vm follow these new affinity rules. You normally would migrate it to the node with the label. However, to show that this affinity rule is working. We are going to power off the vm completely and then power it back on.
@@ -293,8 +345,12 @@ oc get vmi node-affinity-vm
 
 [start=17]
 . See where the pod-affinity-vm and node-affinity-vm are running by looking at OpenShift Console or check on the OpenShift Command line. 
+
+[source,bash]
+----
 oc get vmi pod-anti-affinity-vm
 oc get vmi node-affinity-vm
+----
 
 [start=18]
-. The  pod-anit-affinity-vm will now be running on a different node than node-affinity-vm.  If pod-anit-affinity-vm was not already running on a different node then the node-affinity-vm. 
+. The  pod-anit-affinity-vm will now be running on a different node than node-affinity-vm. If pod-anit-affinity-vm was not already running on a different node then the node-affinity-vm. 

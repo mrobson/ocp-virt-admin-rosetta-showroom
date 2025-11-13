@@ -11,7 +11,7 @@ This lab demonstrates the capabilities of the Node Health Check Operator and the
  . Navigate to Ecosystem → Installed Operators. Then click Node Health Check → create NodeHealthCheck
 Create a node health check 
 Installed Operators click Node Health Check Operator
-Click Node health check > create NodeHealthCheck
+Click Node health check → create NodeHealthCheck
 
 image::exercise6/06-image-nodehealthcheck.png[title="Create NodeHealthCheck", link=self, window=blank, width=100%]
 
