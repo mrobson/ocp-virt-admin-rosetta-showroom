@@ -129,7 +129,7 @@ https://raw.githubusercontent.com/mmayeras/k8s-stress-test/refs/heads/main/stres
 oc patch deployment stress-test -p '{"spec":{"template":{"spec":{"nodeSelector":{"kubernetes.io/hostname":"worker01"}}}}}'
 ----
 
-== 5.5 Verify the deployment
+==== 5.5 Verify the deployment
 [source,bash]
 ----
 oc get pods -n stress-test
