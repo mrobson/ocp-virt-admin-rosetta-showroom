@@ -130,9 +130,20 @@ metadata:
     kubevirt.io/nodeName: worker-cluster-t96sv-1
     kubevirt.io/size: small
     network.kubevirt.io/headlessService: headless
+----
 
+[source,bash]
+----
 :wq!
+----
+
+[source,bash]
+----
 oc edit vm node-affinity-vm -n affinity
+----
+
+[source,bash]
+----
 apiVersion: kubevirt.io/v1
 kind: VirtualMachine
 metadata:
@@ -196,6 +207,7 @@ spec:
         kubevirt.io/size: small
         network.kubevirt.io/headlessService: headless
 ----
+
 [source,bash]
 ----
 :wq!
@@ -321,6 +333,10 @@ oc get vmi node-affinity-vm
 [source,bash]
 ----
 oc edit vm pod-anti-affinity-vm 
+----
+
+[source,bash]
+----
 :q!
 ----
 
