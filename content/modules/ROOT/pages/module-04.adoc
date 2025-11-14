@@ -125,7 +125,7 @@ The primary benefit of using pod affinity is to improve performance for dependen
 This lab will illustrate the setup and function of Pod Affinity.
 
 [start=1]
-. To begin, we need to apply a label to the node-affinity-vm. This will enable it to serve as the VM that our pod will have pod affinity to. The label can be added by editing the VM within the OpenShift CLI and including app: node-affinity-vm
+. To begin, we need to apply a label to the node-affinity-vm. This will enable it to serve as the VM that our pod will have pod affinity to. The label can be added by editing the VM within the OpenShift CLI and including app: fedora
 [source,bash]
 ----
 oc edit vmi node-affinity-vm -n affinity
@@ -149,7 +149,7 @@ metadata:
   - foregroundDeleteVirtualMachine
   generation: 13
   labels:
-    app: node-affinity-vm   ←—- Put label here
+    app: fedora   ←—- Put label here
     kubevirt.io/domain: node-affinity-vm
     kubevirt.io/nodeName: worker-cluster-t96sv-1
     kubevirt.io/size: small
@@ -190,7 +190,7 @@ metadata:
   - kubevirt.io/virtualMachineControllerFinalize
   generation: 3
   labels:
-    app: node-affinity-vm  ←-- This will already exist
+    app: node-affinity-vm  ←-- Do not put the label here
     kubevirt.io/dynamic-credentials-support: "true"
     podaffinity: ""
     vm.kubevirt.io/template: rhel9-server-small
@@ -226,7 +226,7 @@ spec:
         vm.kubevirt.io/workload: server
       creationTimestamp: null
       labels:
-        app: node-affinity-vm  ←—- Put label here
+        app: fedora  ←—- Put label here
         kubevirt.io/domain: node-affinity-vm
         kubevirt.io/size: small
         network.kubevirt.io/headlessService: headless
@@ -365,7 +365,7 @@ image::exercise4/04-image-affinity06.png[title="Add Pod Anti-Affinity Rule", lin
 . Next, we will set a key and value to establish Pod Anti-affinity
 , ensuring this VM runs on the same node as node-affinity-vm. Set the key to app and the value to node-affinity-vm. The resulting Pod Affinity rule should match the illustration provided below. Verify the rule's correctness, then click Save affinity rule.
 
-image::exercise4/04-image-affinity06.png[title="Add Pod Anti-Affinity Rule", link=self, window=blank, width=100%]
+image::exercise4/04-image-affinity07.png[title="Add Pod Anti-Affinity Rule", link=self, window=blank, width=100%]
 
 [start=11]
 . Click Apply Rules
