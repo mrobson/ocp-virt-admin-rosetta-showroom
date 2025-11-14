@@ -11,6 +11,7 @@ You can benefit from descheduling running pods in situations such as the followi
 * New nodes are added to clusters.
 * Pods have been restarted too many times.
 
+
 == Objectives
 
 In this module, we will guide you through the process of configuring Rescheduling Strategies with this profile:
@@ -28,17 +29,18 @@ In this module, we will guide you through the process of configuring Reschedulin
 
 == Instructions
 
-=== 1. Access the LAB
-1.1 Log in to the OpenShift cluster as the <admin> user with <password> as the password
+[start=1]
+. Access the LAB
 
+.. Log in to the OpenShift cluster as the <admin> user with <password> as the password
 
 [source,bash]
 ----
 oc login -u admin -p redhatocp https://api.ocp4.example.com:6443
 ----
 
-
-=== 2. Check which virtual machines are running in the `dynamic-schedule` namespace
+[start=2]
+. Check which virtual machines are running in the `dynamic-schedule` namespace
 
 [source,bash]
 ----
@@ -54,11 +56,10 @@ dynamic-schedule-vm1    10m     Running   10.129.2.111   worker01
 dynamic-schedule-vm2    10m     Running   10.129.2.112   worker02
 ----
 
-Or using the OpenShift Virtualization console, you can see the VMs in the `dynamic-schedule` namespace.
 
-image::exercise5/05-image-vm-list.png[title="VM List", link=self, window=blank, width=100%]
 
-=== 3. Configure the Descheduler Operator
+[start=3]
+. Configure the Descheduler Operator
 
 [source,bash]
 ----
@@ -93,55 +94,55 @@ spec:
 
 NOTE: Notice the mode is set to Predictive. By default, the descheduler does not evict pods. To evict pods, set mode to Automatic.
 
-
-=== 4. Ensure the descheduler pod is running and check the logs in the openshift-kube-descheduler-operator namespace
+[start=4]
+. Ensure the descheduler pod is running and check the logs in the openshift-kube-descheduler-operator namespace
 
 [source,bash]
 ----
 oc logs -n openshift-kube-descheduler-operator -l app=descheduler
 ----
 
+[start=5]
+. Deploy a stress test pod to validate the descheduler functionality
 
-=== 5. Deploy a stress test pod to validate the descheduler functionality
-
-==== 5.1 Create a new project for the stress test
+.. Create a new project for the stress test
 [source,bash]
 ----
 oc new-project stress-test
 ----
 
-==== 5.2 Create the configuration from a config map
+.. Create the configuration from a config map
 [source,bash]
 ----
 oc apply -f https://raw.githubusercontent.com/mmayeras/k8s-stress-test/refs/heads/main/stress-config.yaml
 ----
 
-==== 5.3 Create the deployment
+.. Create the deployment
 [source,bash]
 ----
-https://raw.githubusercontent.com/mmayeras/k8s-stress-test/refs/heads/main/stress-deploy.yaml
+oc apply -f https://raw.githubusercontent.com/mmayeras/k8s-stress-test/refs/heads/main/stress-deploy.yaml
 ----
 
-==== 5.4 Edit the deployment to use a specific node selector (place it on a node where at least 1 vm is running)
+.. Edit the deployment to use a specific node selector (place it on a node where at least 1 vm is running)
 
 [source,bash]
 ----
 oc patch deployment stress-test --merge -p '{"spec":{"template":{"spec":{"nodeSelector":{"kubernetes.io/hostname":"worker01"}}}}}'
 ----
 
-==== 5.5 Verify the deployment
+.. Verify the deployment
 [source,bash]
 ----
 oc get pods -n stress-test
 ----
 
-==== 5.6 Observe the descheduler pod logs in the openshift-kube-descheduler-operator namespace
+.. Observe the descheduler pod logs in the openshift-kube-descheduler-operator namespace
 [source,bash]
 ----
 oc logs -f -n openshift-kube-descheduler-operator -l app=descheduler
 ----
 
-==== 5.7 Edit the kubedescheduler cluster resource to set the deschedulingIntervalSeconds to a lower value for testing purposes.
+.. Edit the kubedescheduler cluster resource to set the deschedulingIntervalSeconds to a lower value for testing purposes.
 [source,bash]
 ----
 oc -n openshift-kube-descheduler-operator patch kubedescheduler cluster --type merge -p '{"spec":{"deschedulingIntervalSeconds":600}}'
@@ -161,19 +162,22 @@ I1113 15:30:00.673755       1 evictions.go:551] "Evicted pod in dry run mode" po
 
 NOTE: Notice the mode is set to Predictive so the eviction is in dry run mode. To evict pods, set mode to Automatic.
 
-=== 6. Turn on the descheduler mode to Automatic
+[start=6]
+. Turn on the descheduler mode to Automatic
 [source,bash]
 ----
 oc -n openshift-kube-descheduler-operator patch kubedescheduler cluster --type merge -p '{"spec":{"mode":"Automatic"}}'
 ----
 
-=== 7. Verify the descheduler pod logs in the openshift-kube-descheduler-operator namespace
+[start=7]
+. Verify the descheduler pod logs in the openshift-kube-descheduler-operator namespace
 [source,bash]
 ----
 oc logs -f -n openshift-kube-descheduler-operator -l app=descheduler
 ----
 
-=== 8. Confirm the pods are evicted and rescheduled on another node
+[start=8]
+. Confirm the pods are evicted and rescheduled on another node
 
 [source,bash]
 ----
