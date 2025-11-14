@@ -32,7 +32,7 @@ In this module, we will guide you through the process of configuring Reschedulin
 [start=1]
 . Access the LAB
 
-.. Log in to the OpenShift cluster as the <admin> user with <password> as the password
+Log in to the OpenShift cluster as the <admin> user with <password> as the password
 
 [source,bash]
 ----
@@ -87,9 +87,10 @@ spec:
       included:
         - dynamic-schedule
   profiles:
-    - DevKubeVirtRelieveAndMigrate # For OCP 4.20, use KubeVirtRelieveAndMigrate
-  deschedulingIntervalSeconds: 3600 # This is the interval at which the descheduler will run ; Set a lower value for testing purposes
-  managementState: Managed    
+    - KubeVirtRelieveAndMigrate 
+  # This is the interval at which the descheduler will run ; Set a lower value for testing purposes :
+  deschedulingIntervalSeconds: 3600 
+  managementState: Managed     
 ----
 
 NOTE: Notice the mode is set to Predictive. By default, the descheduler does not evict pods. To evict pods, set mode to Automatic.
@@ -105,44 +106,38 @@ oc logs -n openshift-kube-descheduler-operator -l app=descheduler
 [start=5]
 . Deploy a stress test pod to validate the descheduler functionality
 
-.. Create a new project for the stress test
-[source,bash]
-----
-oc new-project stress-test
-----
 
-.. Create the configuration from a config map
-[source,bash]
-----
-oc apply -f https://raw.githubusercontent.com/mmayeras/k8s-stress-test/refs/heads/main/stress-config.yaml
-----
-
-.. Create the deployment
-[source,bash]
-----
-oc apply -f https://raw.githubusercontent.com/mmayeras/k8s-stress-test/refs/heads/main/stress-deploy.yaml
-----
-
-.. Edit the deployment to use a specific node selector (place it on a node where at least 1 vm is running)
+.. Edit the existing stress-testdeployment to use a specific node selector (place it on a node where at least 1 vm is running)
++
 
 [source,bash]
 ----
-oc patch deployment stress-test --merge -p '{"spec":{"template":{"spec":{"nodeSelector":{"kubernetes.io/hostname":"worker01"}}}}}'
+oc -n dynamic-schedule patch deployment stress-test --merge -p '{"spec":{"template":{"spec":{"nodeSelector":{"kubernetes.io/hostname":"worker01"}}}}}'
+----
+
+.. Scale the deployment
++
+[source,bash]
+----
+oc -n dynamic-schedule scale deployment stress-test --replicas=1
 ----
 
 .. Verify the deployment
++
 [source,bash]
 ----
-oc get pods -n stress-test
+oc get pods -n dynamic-schedule
 ----
 
 .. Observe the descheduler pod logs in the openshift-kube-descheduler-operator namespace
++
 [source,bash]
 ----
 oc logs -f -n openshift-kube-descheduler-operator -l app=descheduler
 ----
 
 .. Edit the kubedescheduler cluster resource to set the deschedulingIntervalSeconds to a lower value for testing purposes.
++
 [source,bash]
 ----
 oc -n openshift-kube-descheduler-operator patch kubedescheduler cluster --type merge -p '{"spec":{"deschedulingIntervalSeconds":600}}'
