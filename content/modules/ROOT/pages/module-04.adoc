@@ -52,7 +52,7 @@ oc get nodes
 oc label node <worker where node-affinity-vm is not running> zone=east
 ----
 
-Alternatively you can use the OpenShift Console by going to Compute → Nodes and then pick a node where node-affinity-vm is not running. Then click the 3 dots and click edit labels. Once finished adding the label clicked save.
+Alternatively you can use the OpenShift Console by going to Compute → Nodes and then pick a node where node-affinity-vm is not running. Then click the 3 dots and click edit labels. Once finished adding the label click save.
 
 image::exercise4/04-image-affinity.png[title="Label Nodes", link=self, window=blank, width=100%]
 
@@ -64,7 +64,7 @@ image::exercise4/04-image-affinity.png[title="Label Nodes", link=self, window=bl
 oc get nodes <worker you just labeled> --show-labels | grep -i zone=east
 ----
 
-Alternatively you can use the OpenShift Console by going to Compute → Nodes and then pick a node you just label. Then click the 3 dots and click edit labels. Once finished looking clicked save.
+Alternatively you can use the OpenShift Console by going to Compute → Nodes and then pick a node you just label. Then click the 3 dots and click edit labels. Once finished looking click save.
 
 [start=7]
 . Navigate to Virtualization → Virtual Machines → node-affinity-vm → Configuration 
