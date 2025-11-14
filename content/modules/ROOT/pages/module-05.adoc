@@ -29,18 +29,29 @@ In this module, we will guide you through the process of configuring Reschedulin
 
 == Instructions
 
-[start=1]
-. Access the LAB
 
-Log in to the OpenShift cluster as the <admin> user with <password> as the password
+. Login into your bastion host with credentials provided to you by the lab administrator. You will need this for later steps.
++
+
+[source,bash]
+----	
+ssh lab-user@<host> -p 32270
+----
+
+
+. Using the credentials provided by the lab administrator, log in to the OpenShift CLI from your terminal on the bastion host. Be sure to substitute the placeholder password and cluster name with the specific values you were given.
++
 
 [source,bash]
 ----
-oc login -u admin -p redhatocp https://api.ocp4.example.com:6443
+oc login -u admin -p <password> --server=https://api.cluster-<clustername>.dynamic.redhatworkshops.io:6443
+oc login whoami --show-console
 ----
 
-[start=2]
+
 . Check which virtual machines are running in the `dynamic-schedule` namespace
++
+
 
 [source,bash]
 ----
@@ -56,10 +67,10 @@ dynamic-schedule-vm1    10m     Running   10.129.2.111   worker01
 dynamic-schedule-vm2    10m     Running   10.129.2.112   worker02
 ----
 
-
-
 [start=3]
 . Configure the Descheduler Operator
++
+
 
 [source,bash]
 ----
