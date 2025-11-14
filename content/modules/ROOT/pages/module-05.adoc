@@ -190,12 +190,24 @@ oc logs -f -n openshift-kube-descheduler-operator -l app=descheduler
 oc get pods -n dynamic-schedule -o wide
 ----
 
-You should see the following output: 
+You should now see the two vms running on the same node: 
 
 [source,text]
 ----
 NAME                     READY   STATUS    RESTARTS   AGE     IP             NODE       NOMINATED NODE   READINESS GATES
-virt-launcher-vm01       1/1     Running   0          10m     10.129.2.111   worker21   <none>           <none>
+virt-launcher-vm01       1/1     Running   0          10m     10.129.2.111   worker02   <none>           <none>
 virt-launcher-vm02       1/1     Running   0          10m     10.129.2.112   worker02   <none>           <none>
 ----
 
+[start=9]
+. You can confirm the eivtion is working by placing the stress test pod on the node where the VMs are running and confirm they are evicted and rescheduled on another node
+
+[source,bash]
+----
+oc -n dynamic-schedule patch deployment stress-test --merge -p '{"spec":{"template":{"spec":{"nodeSelector":{"kubernetes.io/hostname":"worker02"}}}}}'
+----
+
+[source,bash]
+----
+oc get pods -n dynamic-schedule -o wide
+----
