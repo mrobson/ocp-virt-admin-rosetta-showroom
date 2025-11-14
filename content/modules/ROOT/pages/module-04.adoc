@@ -149,7 +149,7 @@ metadata:
   - foregroundDeleteVirtualMachine
   generation: 13
   labels:
-    app: node-affinity-vm  ←—--
+    app: node-affinity-vm   ←—- Put label here
     kubevirt.io/domain: node-affinity-vm
     kubevirt.io/nodeName: worker-cluster-t96sv-1
     kubevirt.io/size: small
