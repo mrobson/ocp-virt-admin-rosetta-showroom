@@ -87,6 +87,7 @@ oc get node <node_name> -o jsonpath='{.status.allocatable.cpu}{"\n"}'
 
 **Using the OpenShift Console:**
 Navigate to Compute → Nodes
+
 image::exercise2/node-details.png[title="Confirm number of CPUs", link=self, window=blank, width=100%]
 
 [start=4]
@@ -120,6 +121,7 @@ oc get vmi overcommit-vm-1 -n overcommit -o jsonpath='{.spec.domain.cpu}{"\n"}'
 
 **Using the OpenShift Console:**
 Navigate to Virtualization → Virtual Machines and select the overcommit-vm-1 VM.
+
 image::exercise2/vm-details.png[title="Confirm number of CPUs", link=self, window=blank, width=100%]
 
 [start=5]
@@ -215,6 +217,7 @@ oc get pod -n overcommit <pod_name> \
 
 **Using the OpenShift Console:**
 Navigate to Workloads → Pods and select the virtlauncher pod.
+
 image::exercise2/pod-cpu-details.png[title="Confirm number of CPUs", link=self, window=blank, width=100%]
 
 *Key observation*: A VM with 48 vCPUs only requests `4800m` (0.1 * 48 = 4.8 CPU) by default!
