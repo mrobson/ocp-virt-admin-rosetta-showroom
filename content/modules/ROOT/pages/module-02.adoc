@@ -242,8 +242,21 @@ Observe the memory requests for the virt-launcher pod compared to the memory all
 image::exercise2/vm-memory-assigned.png[title="VM Memory Assigned", link=self, window=blank, width=100%]
 
 
+[source,bash]
+----
+oc get vm  overcommit-vm-1 -o json | jq .spec.template.spec.domain.memory
+{
+  "guest": "2Gi"
+}
+----
+
 image::exercise2/virt-launcher-memory-request.png[title="Virt-Launcher Memory Request", link=self, window=blank, width=100%]
 
+[source,bash]
+----
+oc get pod -l vm.kubevirt.io/name=overcommit-vm-1 -o json | jq .items[0].spec.containers[0].resources.requests.memory
+"1670Mi"
+----
 
 We can observe that the virt-launcher pod is requesting 2696Mi which is 2048Mi + some overhead.
 
