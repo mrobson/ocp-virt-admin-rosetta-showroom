@@ -352,7 +352,7 @@ This lab will guide you through setting up and demonstrating the functionality o
 image::exercise4/04-image-affinity06.png[title="Add Pod Anti-Affinity Rule", link=self, window=blank, width=100%]
 
 [start=6]
-. Change the type to  Workload (pod) Anit-Affinity
+. Change the type to  Workload (pod) Anti-Affinity
 
 [start=7]
 . Keep the condition to Required during scheduling.
@@ -373,7 +373,7 @@ image::exercise4/04-image-affinity07.png[title="Add Pod Anti-Affinity Rule", lin
 . Click Apply Rules
 
 [start=12]
-. Now let's take a look at the Pod Anto Affinity rule on pod-anti-affinity-vm. You can do this by using the GUI and going to YAML on the pod-anti-affinity-vm or you can do it on the CLI.
+. Now let's take a look at the Pod Anti Affinity rule on pod-anti-affinity-vm. You can do this by using the GUI and going to YAML on the pod-anti-affinity-vm or you can do it on the CLI.
 
 [source,bash]
 ----
@@ -414,4 +414,4 @@ oc get vmi node-affinity-vm
 ----
 
 [start=18]
-. The  pod-anit-affinity-vm will now be running on a different node than node-affinity-vm. If pod-anit-affinity-vm was not already running on a different node then the node-affinity-vm. 
+. The  pod-anti-affinity-vm will now be running on a different node than node-affinity-vm. If pod-anti-affinity-vm was not already running on a different node then the node-affinity-vm. 

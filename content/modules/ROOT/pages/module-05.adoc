@@ -123,21 +123,21 @@ oc logs -n openshift-kube-descheduler-operator -l app=descheduler
 
 [source,bash]
 ----
-oc -n dynamic-schedule patch deployment stress-test --type merge -p '{"spec":{"template":{"spec":{"nodeSelector":{"kubernetes.io/hostname":"worker01"}}}}}'
+oc -n dynamic-schedule-stress-test patch deployment stress-test --type merge -p '{"spec":{"template":{"spec":{"nodeSelector":{"kubernetes.io/hostname":"worker01"}}}}}'
 ----
 
 .. Scale the deployment
 +
 [source,bash]
 ----
-oc -n dynamic-schedule scale deployment stress-test --replicas=1
+oc -n dynamic-schedule-stress-test scale deployment stress-test --replicas=1
 ----
 
 .. Verify the deployment
 +
 [source,bash]
 ----
-oc get pods -n dynamic-schedule
+oc get pods -n dynamic-schedule-stress-test
 ----
 
 .. Observe the descheduler pod logs in the openshift-kube-descheduler-operator namespace
