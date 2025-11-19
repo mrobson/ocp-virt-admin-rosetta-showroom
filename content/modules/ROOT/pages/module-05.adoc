@@ -1,4 +1,4 @@
-= Dynamic Rescheduling of Workloads
+== Introduction
 
 
 You can use the descheduler to evict pods based on specific strategies so that the pods can be rescheduled onto more appropriate nodes.
@@ -27,49 +27,51 @@ In this module, we will guide you through the process of configuring Reschedulin
 * Descheduler Operator must be installed
 * The `KubeVirtRelieveAndMigrate` profile requires PSI metrics to be enabled on all worker nodes. For your convenience, this is already enabled in this lab.
 
+NOTE: PSI (Pressure Stall Information) is a Linux kernel feature that measures and reports the time tasks spend waiting for CPU, memory, or I/O resources, providing visibility into resource contention and saturation. It quantifies how much time processes are stalled waiting for resources, helping identify performance bottlenecks by showing what percentage of time your system is under pressure from insufficient resources.
+
 == Instructions
 . Login into your bastion host with credentials provided to you by the lab administrator. You will need this for later steps.
 +
 
+[,shell,role=execute,subs="attributes"]
 ----	
-ssh lab-user@<host> -p 32270
+ssh {ssh_user}@{ssh_password} -p 32270
 ----
-
 
 . Using the credentials provided by the lab administrator, log in to the OpenShift CLI from your terminal on the bastion host. Be sure to substitute the placeholder password and cluster name with the specific values you were given.
 +
 
+[,shell,role=execute,subs="attributes"]
 ----
-oc login -u admin -p <password> --server=https://api.cluster-<clustername>.dynamic.redhatworkshops.io:6443
-oc login whoami --show-console
+oc login -u {openshift_cluster_admin_username} -p openshift_cluster_admin_password} --server=https://api.cluster-<clustername>.dynamic.redhatworkshops.io:6443
+$ oc login whoami --show-console
 ----
 
 
 . Check which virtual machines are running in the `dynamic-schedule` namespace
 +
-
+[,shell,role=execute,subs="attributes"]
 ----
 oc get vmi -n dynamic-schedule
 ----
 +
-You should see the following output:
-+
+[,shell,role=execute,subs="attributes"]
+.Output
 ----
 NAME     AGE     PHASE     IP             NODENAME
 dynamic-schedule-vm1    10m     Running   10.129.2.111   worker01
 dynamic-schedule-vm2    10m     Running   10.129.2.112   worker02
 ----
 
-[start=4]
 . Configure the Descheduler Operator
 +
+[,shell,role=execute,subs="attributes"]
 ----
 oc -n openshift-kube-descheduler-operator edit kubedescheduler cluster
 ----
 +
-You should see the following output:
-+
-[source,yaml]
+[,shell,role="wrap",subs="attributes"]
+.Output
 ----
 apiVersion: operator.openshift.io/v1
 kind: KubeDescheduler
@@ -94,53 +96,57 @@ spec:
   managementState: Managed     
 ----
 NOTE: Notice the mode is set to Predictive. By default, the descheduler does not evict pods. To evict pods, set mode to Automatic.
-+
-[start=5]
-. Ensure the descheduler pod is running and check the logs in the openshift-kube-descheduler-operator namespace
-+
 
+
+. Ensure the descheduler pod is running and check the logs in the `openshift-kube-descheduler-operator` namespace
++
+[,shell,role=execute,subs="attributes"]
 ----
 oc logs -n openshift-kube-descheduler-operator -l app=descheduler
 ----
 
-[start=6]
+
 . Deploy a stress test pod to validate the descheduler functionality
 
 
-.. Edit the existing stress-testdeployment to use a specific node selector (place it on a node where at least 1 vm is running)
+.. Edit the existing `stress-test` deployment to use a specific node selector (place it on a node where at least 1 vm is running)
 +
 
+[,shell,role=execute,subs="attributes"]
 ----
 oc -n dynamic-schedule-stress-test patch deployment stress-test --type merge -p '{"spec":{"template":{"spec":{"nodeSelector":{"kubernetes.io/hostname":"worker01"}}}}}'
 ----
 
 .. Scale the deployment
 +
+[,shell,role=execute,subs="attributes"]
 ----
 oc -n dynamic-schedule-stress-test scale deployment stress-test --replicas=1
 ----
 
 .. Verify the deployment
 +
+[,shell,role=execute,subs="attributes"]
 ----
 oc get pods -n dynamic-schedule-stress-test
 ----
 
-.. Observe the descheduler pod logs in the openshift-kube-descheduler-operator namespace
+. Observe the descheduler pod logs in the `openshift-kube-descheduler-operator` namespace
 +
+[,shell,role=execute,subs="attributes"]
 ----
 oc logs -f -n openshift-kube-descheduler-operator -l app=descheduler
 ----
 
-.. Edit the kubedescheduler cluster resource to set the deschedulingIntervalSeconds to a lower value for testing purposes.
+. Edit the kubedescheduler cluster resource to set the `deschedulingIntervalSeconds` to a lower value for testing purposes.
 +
+[,shell,role=execute,subs="attributes"]
 ----
 oc -n openshift-kube-descheduler-operator patch kubedescheduler cluster --type merge -p '{"spec":{"deschedulingIntervalSeconds":600}}'
 ----
 +
-You should see logs like the following:
-+
-[source,text]
+[,shell,role="wrap",subs="attributes"]
+.Output
 ----
 I1113 15:24:57.371043       1 lownodeutilization.go:261] "Number of overutilized nodes" totalNumber=1
 I1113 15:24:57.371052       1 nodeutilization.go:174] "Total capacity to be moved" MetricResource=143
@@ -151,43 +157,44 @@ I1113 15:30:00.673755       1 evictions.go:551] "Evicted pod in dry run mode" po
 +
 NOTE: Notice the mode is set to Predictive so the eviction is in dry run mode. To evict pods, set mode to Automatic.
 
-[start=7]
-. Turn on the descheduler mode to Automatic
+
+. Switch the descheduler mode to Automatic
 +
+[,shell,role="execute wrap",subs="attributes"]
 ----
 oc -n openshift-kube-descheduler-operator patch kubedescheduler cluster --type merge -p '{"spec":{"mode":"Automatic"}}'
 ----
 
-[start=8]
 . Verify the descheduler pod logs in the openshift-kube-descheduler-operator namespace
 +
+[,shell,role="execute wrap",subs="attributes"]
 ----
 oc logs -f -n openshift-kube-descheduler-operator -l app=descheduler
 ----
 
-[start=9]
 . Confirm the pods are evicted and rescheduled on another node
 +
+[,shell,role="execute wrap",subs="attributes"]
 ----
 oc get pods -n dynamic-schedule -o wide
 ----
 +
-You should now see the two vms running on the same node: 
-+
-[source,text]
+[,shell,role="wrap",subs="attributes"]
+.Output
 ----
 NAME                     READY   STATUS    RESTARTS   AGE     IP             NODE       NOMINATED NODE   READINESS GATES
 virt-launcher-vm01       1/1     Running   0          10m     10.129.2.111   worker02   <none>           <none>
 virt-launcher-vm02       1/1     Running   0          10m     10.129.2.112   worker02   <none>           <none>
 ----
 
-[start=10]
-. You can confirm the eivtion is working by placing the stress test pod on the node where the VMs are running and confirm they are evicted and rescheduled on another node
+. You can confirm the eviction is working by placing the stress test pod on the node where the VMs are running and confirm they are evicted and rescheduled on another node
 +
+[,shell,role="execute wrap",subs="attributes"]
 ----
 oc -n dynamic-schedule patch deployment stress-test --merge -p '{"spec":{"template":{"spec":{"nodeSelector":{"kubernetes.io/hostname":"worker02"}}}}}'
 ----
 +
+[,shell,role="execute wrap",subs="attributes"]
 ----
 oc get pods -n dynamic-schedule -o wide
 ----
