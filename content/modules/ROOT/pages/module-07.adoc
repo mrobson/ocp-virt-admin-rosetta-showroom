@@ -1,7 +1,7 @@
 [#fencing]
 = Decentralized Live Migration
 
-Decentralized live migration is a variation of storage live migration that allows you to migrate virtual machines between namespaces or between different, separated clusters.
+Decentralized live migration is a variation of storage live migration that allows you to migrate a `VirtualMachine` between namespaces or between different clusters.
 
 This can be useful for a variety of reasons including:
 
@@ -13,8 +13,10 @@ Expediting Restores: Instant restore capabilities from backup vendors, particula
 
 This lab demonstrates the forthcoming Tech Preview capabilities of Decentralized Live Migration. In this lab, we will walk through the live migration of a `VirtualMachine` from one `Namespace` to another. The process of live migrating between namespaces follows the same process as if you were to migrate a `VirtualMachine` between 2 clusters.
 
+The migration involves two `VirtualMachineInstances` and two `VirtualMachineInstanceMigration` objects. Like a storage live migration, disk contents are copied over the network to the receiving `VirtualMachine`. The key difference is that the receiving virtual machine has a completely separate `VirtualMachineInstance`. In order to coordinate the migration, the status of the source and target `VirtualMachineInstance` has to be synchronized. A dedicated synchronization controller, running in the `openshift-cnv` namespace facilitates communication between the source and target `VirtualMachineInstances`.
+
 [NOTE]
 =====
-The UI based workflow is not finished yet. During this lab we will introduce you to the UI workflow, but perform the migration through the CLI.
+The UI based workflow is not fully functional yet. During this lab we will introduce you to the UI workflow, but perform the migration through the CLI.
 =====
 
