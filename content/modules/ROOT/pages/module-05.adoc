@@ -46,8 +46,7 @@ ssh {ssh_user}@{ssh_password} -p 32270
 oc login -u {openshift_cluster_admin_username} -p openshift_cluster_admin_password} --server=https://api.cluster-<clustername>.dynamic.redhatworkshops.io:6443
 $ oc login whoami --show-console
 ----
-
-
++
 . Check which virtual machines are running in the `dynamic-schedule` namespace
 +
 [,shell,role=execute,subs="attributes"]
@@ -80,7 +79,7 @@ metadata:
   namespace: openshift-kube-descheduler-operator
 spec:
   logLevel: Normal
-  mode: Predictive
+  mode: Predictive <1>
   operatorLogLevel: Normal
   profileCustomizations:
     devEnableSoftTainter: true
@@ -90,10 +89,10 @@ spec:
       included:
         - dynamic-schedule
   profiles:
-    - KubeVirtRelieveAndMigrate 
+    - KubeVirtRelieveAndMigrate
   # This is the interval at which the descheduler will run ; Set a lower value for testing purposes :
-  deschedulingIntervalSeconds: 3600 
-  managementState: Managed     
+  deschedulingIntervalSeconds: 3600
+  managementState: Managed
 ----
 NOTE: Notice the mode is set to Predictive. By default, the descheduler does not evict pods. To evict pods, set mode to Automatic.
 
