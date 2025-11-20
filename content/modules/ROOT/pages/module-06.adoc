@@ -5,7 +5,8 @@ Fencing is a vital mechanism, particularly in high-availability (HA) cluster con
 
 This lab demonstrates the capabilities of the Node Health Check Operator and the Self Node Remediation Operator. You will simulate a node failure to observe the virtual machine migration process and subsequent node recovery.
 
-
+[#fencinginstructions]
+== Instructions
 
 [start=1]
  . Navigate to Ecosystem → Installed Operators. Then click Node Health Check → create NodeHealthCheck
