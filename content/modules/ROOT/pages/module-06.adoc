@@ -51,6 +51,11 @@ $ oc login -u admin -p <password> --server=https://api.cluster-<clustername>.dyn
 .Get VM info
 ----
 $ oc get vmi -n fencing
+----
+
+Output:
++
+----
 NAME          AGE    PHASE     IP            NODENAME                 READY
 fencing-vm1   169m   Running   10.235.0.29   worker-cluster-r2k68-1   True
 ----
@@ -79,7 +84,10 @@ $ oc get nodes <worker from step 5> -w
 $ oc debug node/<worker from step 5>
 # chroot /host
 # systemctl stop kubelet
-
+----
+Output:
++
+----
 Removing debug pod ...
 ----
 
