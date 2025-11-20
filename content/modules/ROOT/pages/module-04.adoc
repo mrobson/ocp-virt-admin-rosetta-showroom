@@ -343,12 +343,12 @@ image::exercise4/04-image-affinity05.png[title="Pod Affinity Rule", link=self, w
 
 [start=13]
 . Now let's take a look at the Pod Affinity rule on *pod-affinity-vm*. You can do this by using the GUI and going to YAML on the pod-anti-affinity-vm or you can do it on the CLI.
-
++
 [source,text,role=execute]
 ----
 $ oc edit vm pod-anti-affinity-vm 
 ---- 
-
++
 [source,text,role=execute]
 ----
 :q!
