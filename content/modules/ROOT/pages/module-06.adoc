@@ -29,20 +29,26 @@ Click create
 [start=3]
 .  Login into your bastion host with credentials provided to you by the lab administrator.
 +
-----
+[source,text,role=execute]
+.Login to the bastion host
+----	
 ssh lab-user@<host> -p 32270
 ----
 
 [start=4]
 . Using the credentials provided by the lab administrator, log in to the OpenShift CLI from your terminal on the bastion host. Be sure to substitute the placeholder password and cluster name with the specific values you were given.
 +
+[source,text,role=execute]
+.Login to OpenShift
 ----
-oc login -u admin -p <password> --server=https://api.cluster-<clustername>.dynamic.redhatworkshops.io:6443
+$ oc login -u admin -p <password> --server=https://api.cluster-<clustername>.dynamic.redhatworkshops.io:6443
 ----
 
 [start=5]
 . Next, locate the node hosting `fencing-vm1` located within the `fencing` project section and record this information. In this example, the node name is `worker-cluster-r2k68-1`.
 +
+[source,text,role=execute]
+.Get VM info
 ----
 $ oc get vmi -n fencing
 NAME          AGE    PHASE     IP            NODENAME                 READY
@@ -51,12 +57,14 @@ fencing-vm1   169m   Running   10.235.0.29   worker-cluster-r2k68-1   True
 
 [start=6]
 . In the next steps, we will create a failure condition and monitor the effects on the OpenShift node.
-To monitor the process, open one additional terminal sessions and SSH into the bastion host from each, as described above.
+To monitor the process, open one additional terminal sessions and SSH into the bastion host as described above.
 
 
 [start=7]
 . In second terminal run a command to continually monitor the state of the worker node you found above (e.g. `worker-cluster-r2k68-1`, but your node name will be different).
 +
+[source,text,role=execute]
+.Monitor the worker nodes
 ----
 $ oc get nodes <worker from step 5> -w
 ----
@@ -65,6 +73,8 @@ $ oc get nodes <worker from step 5> -w
 [start=8]
 . Using the original terminal you created, you will force the worker from step 5 to go into an unhealthy state by stopping the kubelet service.
 +
+[source,text,role=execute]
+.Force the node into a unhealthy state
 ----
 $ oc debug node/<worker from step 5>
 # chroot /host
@@ -78,6 +88,8 @@ Removing debug pod ...
 . In your orginal terminal you opened, you will monitor the status of your virtual machine, `fencing-vm1`.
 Here you will see that self remediation is occurring on the node.
 +
+[source,text,role=execute]
+.Get VM info
 ----
 $ oc get -n fencing vmi -w
 ----
