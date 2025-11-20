@@ -52,7 +52,6 @@ $ oc login -u admin -p <password> --server=https://api.cluster-<clustername>.dyn
 ----
 $ oc get vmi -n fencing
 ----
-
 Output:
 +
 ----
