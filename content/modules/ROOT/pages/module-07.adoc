@@ -32,7 +32,7 @@ These requirements have already been enabled on your cluster and are noted for y
 * You must enable the `DecentralizedLiveMigration` `featureGate` on the `KubeVirt` CR
 
 [#decmlinstructions]
-== Instructions
+== CLI Based Instructions
 
 . Using the credentials provided by the lab administrator, log in to the OpenShift CLI from your terminal on the bastion host. Be sure to substitute the placeholder password and cluster name with the specific values you were given.
 
@@ -437,4 +437,111 @@ image::exercise7/image8-ui-dest-migrating-progress-bar.png[title="Destination Vi
 +
 image::exercise7/image9-ui-dest-running-src-stopped.png[title="Destination Virtual Machine - Running & Source Virtual Machine - Stopped, link=self, window=blank, width=100%]
 
+[#decmluiinstructions]
+== UI Based Instructions
+
+[IMPORTANT]
+=====
+The UI based workflow is not fully functional yet. The workflow is complete, but the migration will fail when the plan is created. The purpose of this section is to introduce you to the UI based workflow.
+=====
+
+Login to the OpenShift console using the credentials provided to you by the lab administrator.
+
+. From the left hand menu, navigate to `Migration for Virtualization` and click `Migration plans`.
+
 +
+image::exercise7/ui/image1-click-migration-plans.png[title="Migration Plans", link=self, window=blank, width=100%]
+
+. From the `Migration plans` page, click `Create plan`.
+
++
+image::exercise7/ui/image2-click-create-plans.png[title="Create Migration Plan", link=self, window=blank, width=100%]
+
+. On the `Creation migration plan` page, give your plan a name like `namespace-to-namespace`. Leave the `Plan project` as the default value of `openshift-mtv`.
+
++
+image::exercise7/ui/image3-planinfo-name-project.png[title="Create migration plan", link=self, window=blank, width=100%]
+
+. Further down the `Creation migration plan` page, select `host` as both the `Target` and `Source` provider and select `vm-live-migration-destination` as the `Target project`.
+
++
+Click `Next`
+
++
+[NOTE]
+====
+Because we are migration our `VirtualMachine` between `Namespaces` within the same cluster, our `Source` and `Target` provider are the same. If we were migrating between clusters, we would have a different provider for the `Target` cluster and select that instead.
+====
+
++
+image::exercise7/ui/image4-planinfo-source-target-providers.png[title="Create migration plan", link=self, window=blank, width=100%]
+
+. From the `Virtual machines` list, select `vm-migration-ns-ns-live` as the `VirtualMachine` you want to migrate.
+
++
+Click `Next`
+
++
+image::exercise7/ui/image5-select-virtual-machine.png[title="Select Virtual Machine", link=self, window=blank, width=100%]
+
+. On the `Network Map` page, select `Use new network map` and select `/Default network` as the `Source network`. The `Target network` should already be set to `Default network`.
+
++
+Click `Next`
+
++
+
+image::exercise7/ui/image6-new-network-map.png[title="Create Network Map", link=self, window=blank, width=100%]
+
+. On the `Storage Map` page, select `Use new storage map` and select `/ocs-external-storagecluster-ceph-rbd` as the `Source storage`. The `Target storage` should already be set to `ocs-external-storagecluster-ceph-rbd`.
+
++
+Click `Next`
+
++
+image::exercise7/ui/image7-new-storage-map.png[title="Create Storage Map", link=self, window=blank, width=100%]
+
+. On the `Migration type` page, select `Live migration`.
+
++
+Click `Next`
+
++
+image::exercise7/ui/image8-migration-type-live.png[title="Migration Type", link=self, window=blank, width=100%]
+
+. On the `Other settings` page, leave the defaults. 
+
++
+Click `Next`
+
++
+image::exercise7/ui/image9-power-state.png[title="Other Settings", link=self, window=blank, width=100%]
+
+. On the `Hooks` page, leave the defaults.
+
++
+Click `Next`
+
++
+image::exercise7/ui/image10-migration-hooks.png[title="Hooks", link=self, window=blank, width=100%]
+
+. On the `Review and create` page, make sure everything looks correct.
+
++
+Click `Create plan`
+
++
+image::exercise7/ui/image11-review-create.png[title="Review and Create", link=self, window=blank, width=100%]
+
+. When the `Plan` is created, you will be taken to the `Plan details` page when you can monitor the status and progress of your migration. 
+
++
+[NOTE]
+====
+In our case, we see `The plan is not ready` due to a `MAC address conflict`. Once this issue is resolved, the migration will complete successfull with no other changes in the workflow.
+
+You can follow https://issues.redhat.com/browse/CNV-72966[CNV-72966 - loosen (or drop) mac collision detection] for more information.
+====
+
++
+image::exercise7/ui/image12-plan-created-error.png[title="Plan Details", link=self, window=blank, width=100%]

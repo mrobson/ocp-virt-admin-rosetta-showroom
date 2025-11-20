@@ -32,5 +32,6 @@
 * xref:module-07.adoc[7. BONUS LAB! Decentralized Live Migration]
 ** xref:module-07.adoc#howdeclm[How does it work?]
 ** xref:module-07.adoc#decmlrequirements[Requirements]
-** xref:module-07.adoc#decmlinstructions[Instructions]
+** xref:module-07.adoc#decmlinstructions[CLI Based Instructions]
 ** xref:module-07.adoc#decmlmonitor[Monitor the Migration]
+** xref:module-07.adoc#decmluiinstructions[UI Based Instructions]
