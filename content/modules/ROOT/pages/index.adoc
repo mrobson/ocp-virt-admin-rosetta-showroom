@@ -41,13 +41,25 @@ The lab environment is a Red Hat OpenShift 4.20 cluster with all the operators r
 * Migration Toolkit for Containers
 * Migration Toolkit for Virtualization
 
-The cluster Web Console is accessible at: {openshift_cluster_console_url}[{openshift_cluster_console_url},window=_blank]
+Web Console: {openshift_cluster_console_url}[{openshift_cluster_console_url},window=_blank]
+
+.Web Console:
+[.wrap,console,role=execute,subs="attributes"]
+----
+{openshift_cluster_console_url}[{openshift_cluster_console_url},window=_blank]
+----
+
+.CLI Login:
+[.wrap,console,role=execute,subs="attributes"]
+----
+oc login -u {openshift_cluster_admin_username} -p `{openshift_cluster_admin_password}` --server=`{ocp_api_url}`
+----
 
 
-The username is `{openshift_cluster_admin_username}` and the password is `{openshift_cluster_admin_password}`.
+Cluster API: {openshift_api_server_url}[{openshift_api_server_url},window=_blank]
 
 
-The cluster API is accessible at `{openshift_api_server_url}`.
+Username: `{openshift_cluster_admin_username}`
 
 
-The username is `{openshift_cluster_admin_username}` and the password is `{openshift_cluster_admin_password}`.
+Password: `{openshift_cluster_admin_password}`
