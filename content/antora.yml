@@ -6,6 +6,7 @@ nav:
 
 asciidoc:
   attributes:
+    page-toclevels: -1
     lab_name: "OpenShift Virtualization Capabilities: Applying the Rosetta Stone"
     release-version: master
     page-pagination: true
