@@ -1,6 +1,6 @@
 = Decentralized Live Migration
 
-A decentralized live migration is a variation of a storage live migration that allows you to migrate a running `VirtualMachine` between namespaces and clusters.
+A decentralized live migration is a variation of a storage live migration that allows you to migrate a running *VirtualMachine* between namespaces and clusters.
 
 This can be useful to:
 
@@ -10,7 +10,7 @@ This can be useful to:
 
 *Expedite Restores*: Instant restore capabilities from backup vendors, particularly when coupled with namespace migration, can drastically speed up recovery times. virtual machines can be quickly restored to a temporary location and then migrated to their original namespace and storage.
 
-This lab demonstrates the forthcoming Tech Preview capabilities of Decentralized Live Migration. In this lab, we will walk through the live migration of a `VirtualMachine` from one `Namespace` to another. The process of live migrating between namespaces follows the same process as if you were to migrate a `VirtualMachine` between 2 clusters.
+This lab demonstrates the forthcoming Tech Preview capabilities of Decentralized Live Migration. In this lab, we will walk through the live migration of a *VirtualMachine* from one *Namespace* to another. The process of live migrating between namespaces follows the same process as if you were to migrate a *VirtualMachine* between 2 clusters.
 
 
 [NOTE]
@@ -21,29 +21,29 @@ The UI based workflow is not fully functional yet. During this lab we will intro
 [#howdeclm]
 == How does it work?
 
-The migration involves two `VirtualMachineInstances` and two `VirtualMachineInstanceMigration` objects. Like a storage live migration, disk contents are copied over the network to the receiving `VirtualMachine`. The key difference is that the receiving virtual machine has a completely separate `VirtualMachineInstance`. In order to coordinate the migration, the status of the source and target `VirtualMachineInstance` has to be synchronized. A dedicated synchronization controller, running in the `openshift-cnv` namespace facilitates communication between the source and target `VirtualMachineInstances`.
+The migration involves two *VirtualMachineInstances* and two *VirtualMachineInstanceMigration* objects. Like a storage live migration, disk contents are copied over the network to the receiving *VirtualMachine*. The key difference is that the receiving virtual machine has a completely separate *VirtualMachineInstance*. In order to coordinate the migration, the status of the source and target *VirtualMachineInstance* has to be synchronized. A dedicated synchronization controller, running in the *openshift-cnv* namespace facilitates communication between the source and target *VirtualMachineInstances*.
 
 [#decmlrequirements]
 == Requirements
 
 These requirements have already been enabled on your cluster and are noted for your reference.
 
-* The `Migration Toolkit for Virtualization (MTV)` Operator must be installed with the feature `feature_ocp_live_migration` set to `true` when creating the `ForkliftController` CR
-* You must enable the `DecentralizedLiveMigration` `featureGate` on the `KubeVirt` CR
+* The *Migration Toolkit for Virtualization (MTV)* Operator must be installed with the feature *feature_ocp_live_migration* set to *true* when creating the *ForkliftController* CR
+* You must enable the *DecentralizedLiveMigration* *featureGate* on the *KubeVirt* CR
 
 [#decmlinstructions]
 == CLI Based Instructions
 
 . Using the credentials provided by the lab administrator, log in to the OpenShift CLI from your terminal on the bastion host. Be sure to substitute the placeholder password and cluster name with the specific values you were given.
 
-. Verify the source `VirtualMachineInstance` is running.
+. Verify the source *VirtualMachineInstance* is running.
 +
 [.wrap,console,role=execute]
 ----
 oc get vmi -n vm-live-migration-source
 ----
 +
-The output will look similar to the following, with a different `IP` and `NODENAME`:
+The output will look similar to the following, with a different *IP* and *NODENAME*:
 
 +
 [source,console]
@@ -53,16 +53,16 @@ vm-migration-ns-ns-live  28m  Running  10.233.2.16 worker-cluster-hflz6-3 True
 ----
 
 +
-Now let's migrate our `VirtualMachine` `vm-migration-ns-ns-live` from the `Namespace` `vm-live-migration-source` to a new `Namespace` `vm-live-migration-destination`.
+Now let's migrate our virtual machine *vm-migration-ns-ns-live* from the namespace *vm-live-migration-source* to a new namespace *vm-live-migration-destination*.
 
 [start=3]
-. As we noted above, the migration requires two `VirtualMachineInstances`.
+. As we noted above, the migration requires two *VirtualMachineInstances*.
 
 + 
-The first step is to create an empty `DataVolume` for the receiver `VirtualMachine` in the destination `Namespace`. +
+The first step is to create an empty *DataVolume* for the receiver virtual machine in the destination namespace. +
 
 + 
-Execute the following command to create the destination `DataVolume`:
+Execute the following command to create the destination *DataVolume*:
 
 + 
 [.wrap,yaml,role=execute]
@@ -87,7 +87,7 @@ EOF
 ----
 
 + 
-Confirm the `DataVolume` and associated `PersistentVolumeClaim` have been created by executing the following 2 commands:
+Confirm the *DataVolume* and associated *PersistentVolumeClaim* have been created by executing the following two commands:
 
 + 
 [.wrap,console,role=execute]
@@ -117,14 +117,14 @@ vm-migration-ns-ns-live  Pending                                  ocs-external-s
 + 
 
 [start=4]
-. Next, create the receiver `VirtualMachine` in the destination `Namespace`
+. Next, create the receiver virtual machine in the destination namespace
 
 + 
-The destination `VirtualMachine` is same as the source `VirtualMachine` except for 2 key differences: 
+The destination *VirtualMachine* is same as the source *VirtualMachine* except for two key differences: 
 
 +
 [loweralpha]
-.. The destination `VirtualMachine` has an `annotation` to set the post live migration `runStrategy`
+.. The destination *VirtualMachine* has an annotation to set the post live migration *runStrategy*
 
 + 
 [source,yaml]
@@ -134,7 +134,7 @@ The destination `VirtualMachine` is same as the source `VirtualMachine` except f
 
 + 
 [loweralpha,start=2]
-.. The destination `VirtualMachine` has different `spec.runStrategy` 
+.. The destination virtual machine has different *spec.runStrategy* 
 
 + 
 [source,yaml]
@@ -143,7 +143,7 @@ The destination `VirtualMachine` is same as the source `VirtualMachine` except f
 ----
 
 + 
-. Execute the following command to create the destination `VirtualMachine`:
+. Execute the following command to create the destination virtual machine:
 
 +
 [.wrap,yaml,role=execute]
@@ -223,7 +223,7 @@ EOF
 ----
 
 +
-Confirm the `VirtualMachine` and associated `VirtualMachineInstance` have been created by executing the following 2 commands:
+Confirm the *VirtualMachine* and associated *VirtualMachineInstance* have been created by executing the following two commands:
 
 +
 [.wrap,console,role=execute]
@@ -252,11 +252,11 @@ vm-migration-ns-ns-live   5m55s   WaitingForSync                    False
 ----
 
 +
-You will notice that the `VirtualMachine` and `VirtualMachineInstance` have a unique `PHASE`, `WaitingForReceiver` and `WaitingForSync`. This indicates the `VirtualMachine` is waiting for the migration to start as a receiver and the `VirtualMachineInstance` is waiting for data to be synchronized from the source `VirtualMachine`.
+You will notice that the *VirtualMachine* and *VirtualMachineInstance* have a unique *PHASE*, *WaitingForReceiver* and *WaitingForSync*. This indicates the *VirtualMachine* is waiting for the migration to start as a receiver and the *VirtualMachineInstance* is waiting for data to be synchronized from the source *VirtualMachine*.
 
 +
 [start=6]
-. With the destination `VirtualMachine` and `VirtualMachineInstance` waiting, create the destination `VirtualMachineInstanceMigration` by executing the following command:
+. With the destination *VirtualMachine* and *VirtualMachineInstance* waiting, create the destination *VirtualMachineInstanceMigration* by executing the following command:
 
 + 
 [.wrap,yaml,role=execute]
@@ -275,7 +275,7 @@ EOF
 ----
 
 +
-Confirm the destination `VirtualMachineInstanceMigration` has been created by executing the following command:
+Confirm the destination *VirtualMachineInstanceMigration* has been created by executing the following command:
 
 + 
 [.wrap,console,role=execute]
@@ -291,14 +291,14 @@ ns-to-ns-vm-live-migration-instance-destination   WaitingForSync   vm-migration-
 ----
 
 [start=7]
-. With the destination `VirtualMachineInstanceMigration` waiting, the final step is to create the source `VirtualMachineInstanceMigration`.
+. With the destination *VirtualMachineInstanceMigration* waiting, the final step is to create the source *VirtualMachineInstanceMigration*.
 
 +
-To create the source `VirtualMachineInstanceMigration`, we need the `IP address` of the leader `virt-synchronization-controller`.
+To create the source *VirtualMachineInstanceMigration*, we need the *IP address* of the leader *virt-synchronization-controller*.
 
 +
 [loweralpha]
-.. Find the leader `virt-synchronization-controller` by looking at the lease holder:
+.. Find the leader *virt-synchronization-controller* by looking at the lease holder:
 
 +
 [.wrap,console,role=execute]
@@ -314,7 +314,7 @@ virt-synchronization-controller     virt-synchronization-controller-65c7b9d5bd-f
 
 +
 [loweralpha,start=2]
-.. Find the `IP address` of the leader `virt-synchronization-controller` using the `Pod` name from the previous command:
+.. Find the *IP address* of the leader *virt-synchronization-controller* using the *Pod* name from the previous command:
 
 +
 [.wrap,console,role=execute]
@@ -329,7 +329,7 @@ virt-synchronization-controller-65c7b9d5bd-f4rbg     1/1   Running  0    150m   
 ----
 
 +
-. Take the `Pod` `IP address` from the previous command output (`10.233.0.222` in the example) and replace `<leader_sync_controller_ip>` in the `VirtualMachineInstanceMigration` YAML below. Take care that you do not remove the port `:9185`
+. Take the *Pod* *IP address* from the previous command output (*10.233.0.222* in the example) and replace *<leader_sync_controller_ip>* in the *VirtualMachineInstanceMigration* YAML below. Take care that you do not remove the port *:9185*
 
 +
 [.wrap,yaml,role=execute]
@@ -350,7 +350,7 @@ EOF
 
 [#decmlmonitor]
 == Monitor the Migration
-When the source `VirtualMachineInstanceMigration` above is created, the `Migration` will start. You can monitor the `Migration` through a few different lenses:
+When the source *VirtualMachineInstanceMigration* above is created, the migration will start. You can monitor the migration through a few different lenses:
 
 . *Using the CLI*
 
@@ -363,7 +363,7 @@ oc get vmim -A -w
 +
 [NOTE]
 =====
-Using `-w` to apply a watch, you will see the `Migration` progress through a number of `PHASEs` from `Scheduling` through to `Succeeded`.
+Using *-w* to apply a watch, you will see the *Migration* progress through a number of *PHASE*s from *Scheduling* through to *Succeeded*.
 =====
 
 +
@@ -390,7 +390,7 @@ oc get vm
 ----
 
 +
-The `VirtualMachine` will show you it is `Migrating`.
+The *VirtualMachine* will show you it is *Migrating*.
 
 +
 [source,console]
@@ -407,64 +407,64 @@ vm-migration-ns-ns-live   7m1s   Migrating   False
 Login to the OpenShift console using the credentials provided to you by the lab administrator.
 
 +
-From the left hand menu, navigate to `Virtualization`, click `Virtual Machines`, followed by the `Namespace` `vm-live-migration-source` to expand it and click on the virtual machine named `vm-migration-ns-ns-live`.
+From the left hand menu, navigate to *Virtualization*, click *Virtual Machines*, followed by the namespace *vm-live-migration-source* to expand it and click on the virtual machine named *vm-migration-ns-ns-live*.
 
 +
-On the `Virtual machine details` page, you will see the the `Source` VM is `Running`.
+On the *Virtual machine details* page, you will see the the *Source* VM is *Running*.
 
 +
 image::exercise7/image1-ui-src-vm-running.png[title="Source Virtual Machine Details - Running", link=self, window=blank, width=100%]
 
 +
-To view the `Destination` VM, select by the `Namespace` `vm-live-migration-destination` to expand it and click on the virtual machine named `vm-migration-ns-ns-live`.
+To view the *Destination* VM, select by the *Namespace* *vm-live-migration-destination* to expand it and click on the virtual machine named *vm-migration-ns-ns-live*.
 
 +
-On the `Virtual machine details` page, you will see the the `Destination` VM. If the `Migration` has not started, it will have a status of `WaitingForReceiver`.
+On the *Virtual machine details* page, you will see the the *Destination* VM. If the migration has not started, it will have a status of *WaitingForReceiver*.
 
 +
 image::exercise7/image2-ui-dest-waiting.png[title="Destination Virtual Machine Details - WaitingForReceiver", link=self, window=blank, width=100%]
 
 +
-If the `Migration` has started and is in the early stages, the VM will a status of `Starting`.
+If the *Migration* has started and is in the early stages, the VM will a status of *Starting*.
 
 +
 image::exercise7/image3-ui-dest-starting.png[title="Destination Virtual Machine Details - Starting", link=self, window=blank, width=100%]
 
 +
-When the `Source` and `Destination` are ready, the status of the `Destination` VM will change to `Migrating`.
+When the *Source* and *Destination* are ready, the status of the *Destination* VM will change to *Migrating*.
   
 +
 image::exercise7/image4-ui-dest-migrating.png[title="Destination Virtual Machine Details - Migrating", link=self, window=blank, width=100%]
 
 +
-Once the `Destination` VM starts `Migrating`, you can click on the `Migrating` status which will display a pop-up panel with information about the state of the migration.
+Once the *Destination* VM starts *Migrating*, you can click on the *Migrating* status which will display a pop-up panel with information about the state of the migration.
 
 +
 image::exercise7/image5-ui-migrating-overview-panel.png[title="Destination Virtual Machine - Migration Pop-up Panel", link=self, window=blank, width=100%]
 
 +
-From the `Migrating` pop-up panel, there is a link `Migration metrics`. Clicking that link will take you to the `Metrics` tab with detailed information about the VM and the migration.
+From the *Migrating* pop-up panel, there is a link *Migration metrics*. Clicking that link will take you to the *Metrics* tab with detailed information about the VM and the migration.
 
 +
 image::exercise7/image6-ui-dest-migrating-metrics.png[title="Destination Virtual Machine - Migration Metrics", link=self, window=blank, width=100%]
 
 +
-Scrolling down on the `Metrics` page, you will see more migration metrics and a `LiveMigration progress` bar.
+Scrolling down on the *Metrics* page, you will see more migration metrics and a *LiveMigration progress* bar.
 
 +
 image::exercise7/image7-ui-dest-migrating-metrics2.png[title="Destination Virtual Machine - Migration Metrics", link=self, window=blank, width=100%]
 
 +
-As the migration progresses, you will see the `LiveMigration progress` bar move until it reaches `100%` and displays a `Complete time`.
+As the migration progresses, you will see the *LiveMigration progress* bar move until it reaches *100%* and displays a *Complete time*.
 
 +
 image::exercise7/image8-ui-dest-migrating-progress-bar.png[title="Destination Virtual Machine - Migration Progress Bar", link=self, window=blank, width=100%]
 
 +
-Navigating back to the `Overview` tab, you will see that the `Destination` VM is now in a `Running` state. You can also see, in the `Projects` sidebar, that the `Source` VM is now `Stopped`.
+Navigating back to the *Overview* tab, you will see that the *Destination* VM is now in a *Running* state. You can also see, in the *Projects* sidebar, that the *Source* VM is now *Stopped*.
 
 +
-This marks the successful completion of the `Namespace` to `Namespace` live migration.
+This marks the successful completion of the *Namespace* to *Namespace* live migration.
 
 +
 image::exercise7/image9-ui-dest-running-src-stopped.png[title="Destination Virtual Machine - Running & Source Virtual Machine - Stopped, link=self, window=blank, width=100%]
@@ -479,98 +479,98 @@ The UI based workflow is not fully functional yet. The workflow is complete, but
 
 Login to the OpenShift console using the credentials provided to you by the lab administrator.
 
-. From the left hand menu, navigate to `Migration for Virtualization` and click `Migration plans`.
+. From the left hand menu, navigate to *Migration for Virtualization* and click *Migration plans*.
 
 +
 image::exercise7/ui/image1-click-migration-plans.png[title="Migration Plans", link=self, window=blank, width=100%]
 
-. From the `Migration plans` page, click `Create plan`.
+. From the *Migration plans* page, click *Create plan*.
 
 +
 image::exercise7/ui/image2-click-create-plans.png[title="Create Migration Plan", link=self, window=blank, width=100%]
 
-. On the `Creation migration plan` page, give your plan a name like `namespace-to-namespace`. Leave the `Plan project` as the default value of `openshift-mtv`.
+. On the *Creation migration plan* page, give your plan a name like `namespace-to-namespace`. Leave the *Plan project* as the default value of *openshift-mtv*.
 
 +
 image::exercise7/ui/image3-planinfo-name-project.png[title="Create migration plan", link=self, window=blank, width=100%]
 
-. Further down the `Creation migration plan` page, select `host` as both the `Target` and `Source` provider and select `vm-live-migration-destination` as the `Target project`.
+. Further down the *Creation migration plan* page, select *host* as both the *Target* and *Source* provider and select *vm-live-migration-destination* as the *Target project*.
 
 +
-Click `Next`
+Click *Next*
 
 +
 [NOTE]
 ====
-Because we are migration our `VirtualMachine` between `Namespaces` within the same cluster, our `Source` and `Target` provider are the same. If we were migrating between clusters, we would have a different provider for the `Target` cluster and select that instead.
+Because we are migration our *VirtualMachine* between *Namespaces* within the same cluster, our *Source* and *Target* provider are the same. If we were migrating between clusters, we would have a different provider for the *Target* cluster and select that instead.
 ====
 
 +
 image::exercise7/ui/image4-planinfo-source-target-providers.png[title="Create migration plan", link=self, window=blank, width=100%]
 
-. From the `Virtual machines` list, select `vm-migration-ns-ns-live` as the `VirtualMachine` you want to migrate.
+. From the *Virtual machines* list, select *vm-migration-ns-ns-live* as the *VirtualMachine* you want to migrate.
 
 +
-Click `Next`
+Click *Next*
 
 +
 image::exercise7/ui/image5-select-virtual-machine.png[title="Select Virtual Machine", link=self, window=blank, width=100%]
 
-. On the `Network Map` page, select `Use new network map` and select `/Default network` as the `Source network`. The `Target network` should already be set to `Default network`.
+. On the *Network Map* page, select *Use new network map* and select */Default network* as the *Source network*. The *Target network* should already be set to *Default network*.
 
 +
-Click `Next`
+Click *Next*
 
 +
 
 image::exercise7/ui/image6-new-network-map.png[title="Create Network Map", link=self, window=blank, width=100%]
 
-. On the `Storage Map` page, select `Use new storage map` and select `/ocs-external-storagecluster-ceph-rbd` as the `Source storage`. The `Target storage` should already be set to `ocs-external-storagecluster-ceph-rbd`.
+. On the *Storage Map* page, select *Use new storage map* and select *ocs-external-storagecluster-ceph-rbd* as the *Source storage*. The *Target storage* should already be set to *ocs-external-storagecluster-ceph-rbd*.
 
 +
-Click `Next`
+Click *Next*
 
 +
 image::exercise7/ui/image7-new-storage-map.png[title="Create Storage Map", link=self, window=blank, width=100%]
 
-. On the `Migration type` page, select `Live migration`.
+. On the *Migration type* page, select *Live migration*.
 
 +
-Click `Next`
+Click *Next*
 
 +
 image::exercise7/ui/image8-migration-type-live.png[title="Migration Type", link=self, window=blank, width=100%]
 
-. On the `Other settings` page, leave the defaults. 
+. On the *Other settings* page, leave the defaults. 
 
 +
-Click `Next`
+Click *Next*
 
 +
 image::exercise7/ui/image9-power-state.png[title="Other Settings", link=self, window=blank, width=100%]
 
-. On the `Hooks` page, leave the defaults.
+. On the *Hooks* page, leave the defaults.
 
 +
-Click `Next`
+Click *Next*
 
 +
 image::exercise7/ui/image10-migration-hooks.png[title="Hooks", link=self, window=blank, width=100%]
 
-. On the `Review and create` page, make sure everything looks correct.
+. On the *Review and create* page, make sure everything looks correct.
 
 +
-Click `Create plan`
+Click *Create plan*
 
 +
 image::exercise7/ui/image11-review-create.png[title="Review and Create", link=self, window=blank, width=100%]
 
-. When the `Plan` is created, you will be taken to the `Plan details` page where you can monitor the status and progress of your migration. 
+. When the *Plan* is created, you will be taken to the *Plan details* page where you can monitor the status and progress of your migration. 
 
 +
 [NOTE]
 ====
-In our case, we see `The plan is not ready` due to a `MAC address conflict`. Once this issue is resolved, the migration will complete successfull with no other changes in the workflow.
+In our case, we see *The plan is not ready* due to a *MAC address conflict*. Once this issue is resolved, the migration will complete successfull with no other changes in the workflow.
 
 You can follow https://issues.redhat.com/browse/CNV-72966[CNV-72966 - loosen (or drop) mac collision detection] for more information.
 ====
