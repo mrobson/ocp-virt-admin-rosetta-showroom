@@ -34,8 +34,6 @@ These requirements have already been enabled on your cluster and are noted for y
 [#decmlinstructions]
 == CLI Based Instructions
 
-include::lab_vars.adoc[]
-
 . Using the credentials provided by the lab administrator, log in to the OpenShift CLI from your terminal on the bastion host. Be sure to substitute the placeholder password and cluster name with the specific values you were given.
 
 +
@@ -45,7 +43,7 @@ oc login -u {openshift_cluster_admin_username} -p `{openshift_cluster_admin_pass
 ----
 
 +
-[subs="attributes"]
+[.wrap,console,role=execute,subs="attributes"]
 ----
 oc login -u {openshift_cluster_admin_username} -p `{openshift_cluster_admin_password}` --server=`{ocp_api_url}`
 ----
