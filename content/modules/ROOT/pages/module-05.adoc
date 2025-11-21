@@ -194,7 +194,7 @@ virt-launcher-vm02       1/1     Running   0          10m     10.129.2.112   wor
 +
 [,shell,role="execute wrap",subs="attributes"]
 ----
-oc -n dynamic-schedule patch deployment stress-test --merge -p '{"spec":{"template":{"spec":{"nodeSelector":{"kubernetes.io/hostname":"worker02"}}}}}'
+oc -n dynamic-schedule patch deployment stress-test --type merge -p '{"spec":{"template":{"spec":{"nodeSelector":{"kubernetes.io/hostname":"worker02"}}}}}'
 ----
 +
 [,shell,role="execute wrap",subs="attributes"]
