@@ -25,20 +25,11 @@ You will walk away with the understanding, knowledge, and experience to showcase
 
 image::virt-icon-large.png[virt-icon-large,55%,55%,align="left"]
 
-
+[#labenvironment]
 == Lab Environment
 
 The terminal window to your right is *already* logged into the lab environment as the *{ssh_user}* user via *ssh*.
 All steps of this lab are to be completed as the *{ssh_user}* user.
-
-
-{bastion_ssh_user_name}
-
-
-{bastion_ssh_password}
-
-
-ssh {bastion_ssh_user_name}@{bastion_public_hostname} -p {bastion_ssh_port}
 
 The lab environment is a Red Hat OpenShift 4.20 cluster with all the operators required for your assignement pre-installed : 
 
@@ -50,32 +41,4 @@ The lab environment is a Red Hat OpenShift 4.20 cluster with all the operators r
 * Migration Toolkit for Containers
 * Migration Toolkit for Virtualization
 
-.Web Console
-{openshift_cluster_console_url}[{openshift_cluster_console_url},window=_blank]
-
-.CLI Login
-[.wrap,console,role=execute,subs="attributes"]
-----
-oc login -u {openshift_cluster_admin_username} -p {openshift_cluster_admin_password} --server={openshift_api_server_url}
-----
-
-
-.Cluster API
-[.wrap,console,role=execute,subs="attributes,macros"]
-----
-{openshift_api_server_url}[{openshift_api_server_url},window=_blank]
-----
-
-
-.Username
-[.wrap,console,role=execute,subs="attributes"]
-----
-{openshift_cluster_admin_username}
-----
-
-
-.Password
-[.wrap,console,role=execute,subs="attributes"]
-----
-{openshift_cluster_admin_password}
-----
+include::lab-access.adoc[]

@@ -1,0 +1,44 @@
+[#labaccess]
+== Accessing the Lab
+
+.Web Console
+{openshift_cluster_console_url}[{openshift_cluster_console_url},window=_blank]
+
+.CLI Login
+[.wrap,console,role=execute,subs="attributes"]
+----
+oc login -u {openshift_cluster_admin_username} -p {openshift_cluster_admin_password} --server={openshift_api_server_url}
+----
+
+.Cluster API
+{openshift_api_server_url}[{openshift_api_server_url},window=_blank]
+
+.OpenShift Username
+[.wrap,console,role=execute,subs="attributes"]
+----
+{openshift_cluster_admin_username}
+----
+
+.OpenShift Password
+[.wrap,console,role=execute,subs="attributes"]
+----
+{openshift_cluster_admin_password}
+----
+
+.Bastion Username
+[.wrap,console,role=execute,subs="attributes"]
+----
+{bastion_ssh_username}
+----
+
+.Bastion Password
+[.wrap,console,role=execute,subs="attributes"]
+----
+{bastion_ssh_password}
+----
+
+.Bastion SSH
+[.wrap,console,role=execute,subs="attributes"]
+----
+ssh {bastion_ssh_username}@{bastion_public_hostname} -p {bastion_ssh_port}
+----

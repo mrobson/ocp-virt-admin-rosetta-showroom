@@ -1,4 +1,6 @@
 * xref:index.adoc[Introduction]
+** xref:index.adoc#labenvironment[Lab Environment]
+** xref:index.adoc#labaccess[Accessing the Lab]
 
 * xref:module-01.adoc[1. Live Migration of Workloads]
 ** xref:module-01.adoc#compute[Compute Migration to a specific node]
