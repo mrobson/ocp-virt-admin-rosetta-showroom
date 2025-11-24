@@ -42,3 +42,5 @@ The lab environment is a Red Hat OpenShift 4.20 cluster with all the operators r
 * Migration Toolkit for Virtualization
 
 include::lab-access.adoc[]
+
+include::bastion-access.adoc[]

@@ -31,31 +31,12 @@ These requirements have already been enabled on your cluster and are noted for y
 * The *Migration Toolkit for Virtualization (MTV)* Operator must be installed with the feature *feature_ocp_live_migration* set to *true* when creating the *ForkliftController* CR
 * You must enable the *DecentralizedLiveMigration* *featureGate* on the *KubeVirt* CR
 
+include::lab-access.adoc[]
+
 [#decmlinstructions]
 == CLI Based Instructions
 
-. Using the credentials provided by the lab administrator, log in to the OpenShift CLI from your terminal on the bastion host. Be sure to substitute the placeholder password and cluster name with the specific values you were given.
-
-+
-[.wrap,console,role=execute]
-----
-oc login -u {openshift_cluster_admin_username} -p `{openshift_cluster_admin_password}` --server=`{ocp_api_url}`
-----
-
-+
-[.wrap,console,role=execute,subs="attributes"]
-----
-oc login -u {openshift_cluster_admin_username} -p `{openshift_cluster_admin_password}` --server=`{ocp_api_url}`
-----
-
-+
-oc login -u `{openshift_cluster_admin_username}` -p `{openshift_cluster_admin_password}` --server={openshift_api_server_url}
-
-+
-Username: `{openshift_cluster_admin_username}`
-
-+
-Password: `{openshift_cluster_admin_password}`
+. Ensure you are logged in as the *admin* user and continue to the next step.
 
 +
 . Verify the source *VirtualMachineInstance* is running.

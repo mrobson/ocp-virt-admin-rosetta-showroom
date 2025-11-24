@@ -25,7 +25,8 @@ In this lab, you will be performing a live migration of a virtual machine
 from one compute node to another. To do this, you will access a running VM,
 determine its current node, and then move it to another node.
 
-*Requirements*
+[#requirements]
+=== *Requirements*
 
 * The underlying PVC must use ReadWriteMany (RWX) access mode
 
