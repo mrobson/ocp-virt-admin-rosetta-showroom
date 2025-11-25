@@ -45,8 +45,8 @@ determine its current node, and then move it to another node.
 [start=1]
 . Ensure you are <<labaccess,logged in to the OpenShift Console as the *admin* user>> from your *web browser* and continue to the next step.
 
-. Navigate to Virtualization -> Virtual Machines and then click on the virtual machine named *live-migrate-vm1*.
-Note which node the VM is currently running on. In this example, it is *worker-cluster-m2ssq-1*, but your worker node will be different.
+. Navigate to *Virtualization -> Virtual Machines* and then click on the virtual machine named *live-migrate-vm1*.
+Note which node the VM is currently running on under *General -> Node*. In this example, it is *worker-cluster-m2ssq-1*, but your worker node will be different.
 +
 image::exercise1/01-image-compute-002.png[title="Virtual machine details", link=self, window=blank, width=100%]
 
@@ -102,7 +102,7 @@ determine its current node, and then move it to another node.
 [start=1]
 . Ensure you are <<labaccess,logged in to the OpenShift Console as the *admin* user>> and continue to the next step.
 
-. Navigate to Virtualization -> Virtual Machines and then click on the virtual machine named *live-migrate-vm1*.
+. Navigate to *Virtualization -> Virtual Machines* and then click on the virtual machine named *live-migrate-vm1*.
 Note which worker node the VM is currently running on (example: *worker-cluster-m2ssq-1*. Your cluster will have a different node name).
 +
 image::exercise1/01-image-compute-002.png[title="Virtual machine details", link=self, window=blank, width=100%]
@@ -148,7 +148,7 @@ TBD
 . Ensure you are <<labaccess,logged in to the OpenShift Console as the *admin* user>> and continue to the next step.
 
 +
-. Navigate to Virtualization -> Virtual Machines, and select the virtualmachines project. Select the VM named *live-migrate-vm1*.
+. Navigate to *Virtualization -> Virtual Machines*, and select the virtualmachines project. Select the VM named *live-migrate-vm1*.
 
 +
 image::exercise1/01-image-storage-001.png[title="Virtual machine details", link=self, window=blank, width=100%]
@@ -184,13 +184,13 @@ Do not click the *Stop* button.
 +
 image::exercise1/01-image-storage-008.png[title="Migration has started", link=self, window=blank, width=100%]
 
-. To view the storage migration status, navigate to Migration -> Storage migration where you can view the status of the migration plan. The migration plan will start in the *Pending* state, then move to *Running*, then finally *Completed*. 
+. To view the storage migration status, navigate to *Migration for Virtualization -> Storage migrations* where you can view the status of the migration plan. The migration plan will start in the *Pending* state, then move to *Running*, then finally *Completed*. 
 +
 NOTE: It may take some time for the migration to complete.
 +
 image::exercise1/01-image-storage-009.png[title="Migration is running", link=self, window=blank, width=100%]
 
-. Once the migration is Complete, navigate back to the virtual machine called *live-migrate-vm1* and view the Configuration -> Storage options again.
+. Once the migration is Complete, navigate back to the virtual machine called *live-migrate-vm1* and view the *Configuration -> Storage* options again.
 Note that the name of the Source has changed and the Storage class has changed to *custom-storage-class*, which is what you selected in the storage migration plan.
 +
 image::exercise1/01-image-storage-010.png[title="VM has been migrated", link=self, window=blank, width=100%]
