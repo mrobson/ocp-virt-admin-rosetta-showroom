@@ -357,12 +357,12 @@ image::exercise4/04-image-affinity05.png[title="Pod Affinity Rule", link=self, w
 . Click *Apply rules*
 
 +
-. Now let's take a look at the Pod Affinity rule on *pod-affinity-vm*. You can do this by using the GUI and going to YAML on the pod-anti-affinity-vm or you can do it on the CLI.
+. Now let's take a look at the Pod Affinity rule on *pod-affinity-vm*. You can view this information either through the GUI by navigating to pod-affinity-vm → YAML, or by using the CLI.
 
 +
 [source,text,role=execute]
 ----
-oc edit vm pod-anti-affinity-vm 
+oc edit vm pod-affinity-vm 
 ---- 
 
 +
@@ -459,7 +459,7 @@ image::exercise4/04-image-affinity07.png[title="Add Pod Anti-Affinity Rule", lin
 . Click Apply Rules
 
 +
-. Now let's take a look at the Pod Anti Affinity rule on pod-anti-affinity-vm. You can do this by using the GUI and going to YAML on the pod-anti-affinity-vm or you can do it on the CLI.
+. Now let's take a look at the Pod Anti Affinity rule on pod-anti-affinity-vm. You can view this information either through the GUI by navigating to pod-anti-affinity-vm → YAML, or by using the CLI.
 
 +
 [source,text,role=execute]
